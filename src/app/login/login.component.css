@@ -1,0 +1,62 @@
+.login-container {
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+}
+
+.login-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+h2 {
+  margin: 0;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.btn-cerrar {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.link-registro {
+  color: #666;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.link-registro:hover {
+  color: #CFF281;
+}
+
+button[type="submit"] {
+  background-color: #CFF281;
+  color: black;
+}
+
+button[type="submit"]:hover {
+  background-color: #bde66b;
+}

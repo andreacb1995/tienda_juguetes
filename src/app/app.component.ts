@@ -1,12 +1,15 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { CabeceraComponent } from './cabecera/cabecera.component';
+import { CategoriasComponent } from './categorias/categorias.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  standalone: true,
+  imports: [CommonModule, CabeceraComponent, CategoriasComponent],
+  template: `
+    <app-cabecera></app-cabecera>
+    <app-categorias></app-categorias>
+  `
 })
-export class AppComponent {
-  title = 'tienda_eduKids';
-}
+export class AppComponent {}
