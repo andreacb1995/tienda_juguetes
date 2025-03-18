@@ -1,0 +1,33 @@
+  .cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    height: 60px; 
+    position: relative;
+    background-color: #FFFFFF; /* Blanco puro */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* Sombra sutil */  
+  
+  }
+  
+  .logo img {
+    width: 280px;
+    height: 100%;
+  }
+
+  .iconos {
+    position: absolute;
+    right: 20px;
+    display: flex;
+    gap: 10px; 
+  }
+  .iconos mat-icon {
+  background-color: white;
+  color: black;
+  border-radius: 50%;
+  padding: 5px;
+  transition: color 0.3s;
+  }
+  .iconos mat-icon:hover {
+    color: #CFF281;
+  } 

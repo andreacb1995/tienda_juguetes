@@ -1,0 +1,43 @@
+<!-- src/app/categorias/categorias.component.html -->
+<div class="categorias">
+  <div class="categoria-lista">
+    <button class="categoria-item" (click)="cambiarContenido('puzles')">
+      <img src="assets/imagenes/categorias_puzzles.jpg" alt="Puzles">
+      <p>Puzles</p>
+    </button>
+
+    <button class="categoria-item" (click)="cambiarContenido('creatividad')">
+      <img src="assets/imagenes/categorias_creatividad.jpg" alt="Creatividad">
+      <p>Creatividad</p>
+    </button>
+
+    <button class="categoria-item" (click)="cambiarContenido('juegos-mesa')">
+      <img src="assets/imagenes/categorias_juegosMesa.jpg" alt="Juegos de mesa">
+      <p>Juegos de Mesa</p>
+    </button>
+
+    <button class="categoria-item" (click)="cambiarContenido('madera')">
+      <img src="assets/imagenes/categorias_madera.jpg" alt="Juguetes de madera">
+      <p>Madera</p>
+    </button>
+  </div>
+</div>
+
+<div class="destacados">
+  <h2>{{getCategoriaTitle(categoriaActual)}}</h2>
+
+  <!-- Mensaje de error si existe -->
+  <div class="error-message" *ngIf="error">
+    {{error}}
+  </div>
+
+  <!-- Grid de juguetes -->
+  <div class="juguetes-grid" *ngIf="juguetesFiltrados.length">
+    <div class="juguete-card" *ngFor="let juguete of juguetesFiltrados">
+      <img [src]="juguete.imagen" [alt]="juguete.nombre">
+      <h3>{{juguete.nombre}}</h3>
+      <p>{{juguete.descripcion}}</p>
+      <p class="precio">{{juguete.precio | currency:'EUR'}}</p>
+    </div>
+  </div>
+</div>
