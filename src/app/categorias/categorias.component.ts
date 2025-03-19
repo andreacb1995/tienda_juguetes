@@ -1,16 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { JuguetesService, Juguete } from '../servicios/juguetes.service';
+import { JuguetesService, Juguete } from '../services/juguetes.service';
+import { NavegacionService } from '../services/navegacion.service';
+import { CarritoService } from '../services/carrito.service'
+import { CarritoLateralComponent } from '../carrito-lateral/carrito-lateral.component';
 
 interface ItemCarrito extends Juguete {
   cantidad: number;
 }
 
+interface Categoria {
+  id: string;
+  nombre: string;
+  imagen: string;
+}
+
 @Component({
   selector: 'app-categorias',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, CarritoLateralComponent],
   templateUrl: './categorias.component.html',
   styleUrls: ['./categorias.component.css']
 })
@@ -21,27 +30,67 @@ export class CategoriasComponent implements OnInit {
   carritoVisible = false;
   itemsCarrito: ItemCarrito[] = [];
   totalCarrito = 0;
+  cargando: boolean = false;
 
-  constructor(private juguetesService: JuguetesService) {
+  categorias: Categoria[] = [
+    {
+      id: 'puzzles',
+      nombre: 'Puzzles',
+      imagen: 'puzzles.jpg'
+    },
+    {
+      id: 'juegos-creatividad',
+      nombre: 'Creatividad',
+      imagen: 'creatividad.jpg'
+    },
+    {
+      id: 'juegos-mesa',
+      nombre: 'Mesa',
+      imagen: 'mesa.jpg'
+    },
+    {
+      id: 'juegos-madera',
+      nombre: 'Madera',
+      imagen: 'madera.jpg'
+    }
+  ];
+
+  constructor(
+    private juguetesService: JuguetesService,
+    private navegacionService: NavegacionService,
+    private carritoService: CarritoService
+  ) {
+    this.navegacionService.cambioCategoria$.subscribe(categoria => {
+      this.cambiarContenido(categoria);
+    });
   }
 
   ngOnInit() {
     this.cambiarContenido('novedades');
+    this.carritoService.carrito$.subscribe(items => {
+      this.itemsCarrito = [...items]; 
+      this.actualizarCarrito();
+    });
   }
+  
 
   cambiarContenido(categoria: string): void {
     this.categoriaActual = categoria;
     this.error = '';
+    this.cargando = true;
     
-    this.juguetesService.getJuguetesPorCategoria(categoria)
+    const rutaCategoria = categoria === 'novedades' ? '' : categoria;
+    
+    this.juguetesService.getJuguetesPorCategoria(rutaCategoria)
       .subscribe({
         next: (juguetes) => {
           this.juguetesFiltrados = juguetes;
+          this.cargando = false;
         },
         error: (error) => {
-          console.error('Error al cargar juguetes:', error);
           this.error = 'Error al cargar los juguetes. Por favor, intenta de nuevo.';
           this.juguetesFiltrados = [];
+          this.cargando = false;
         }
       });
   }
@@ -49,9 +98,9 @@ export class CategoriasComponent implements OnInit {
   getCategoriaTitle(categoria: string): string {
     const titles: { [key: string]: string } = {
       'juegos-mesa': 'Juegos de Mesa',
-      'puzles': 'Puzles',
-      'creatividad': 'Creatividad',
-      'madera': 'Juguetes de Madera',
+      'puzzles': 'Puzzles',
+      'juegos-creatividad': 'Creatividad',
+      'juegos-madera': 'Juguetes de Madera',
       'novedades': 'Novedades'
     };
     return titles[categoria] || categoria;
@@ -61,17 +110,14 @@ export class CategoriasComponent implements OnInit {
     this.carritoVisible = !this.carritoVisible;
   }
 
-  agregarAlCarrito(juguete: Juguete) {
-    const itemExistente = this.itemsCarrito.find(item => item._id === juguete._id);
-    
-    if (itemExistente) {
-      itemExistente.cantidad++;
-    } else {
-      this.itemsCarrito.push({...juguete, cantidad: 1});
+  async agregarAlCarrito(juguete: Juguete) {
+    console.log('Agregando producto al carrito:', juguete);
+    try {
+      await this.carritoService.agregarItem(juguete);
+      this.carritoService.mostrarCarritoLateral();
+    } catch (error) {
+      console.error('Error al agregar al carrito:', error);
     }
-    
-    this.actualizarCarrito();
-    this.carritoVisible = true;
   }
 
   eliminarItem(item: ItemCarrito) {
@@ -96,7 +142,11 @@ export class CategoriasComponent implements OnInit {
       total + (item.precio * item.cantidad), 0);
   }
 
-  realizarPedido() {
-    console.log('Realizando pedido:', this.itemsCarrito);
+  seleccionarCategoria(categoriaId: string): void {
+    this.navegacionService.cambiarCategoria(categoriaId);
+  }
+  
+  irACarrito() {
+    this.navegacionService.irACarrito();
   }
 }

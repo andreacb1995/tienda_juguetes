@@ -1,47 +1,54 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatDialogRef, MatDialog } from '@angular/material/dialog';
+import { AuthService } from '../services/auth.service';
+import { RegistroComponent } from '../registro/registro.component';
 import { MatButtonModule } from '@angular/material/button';
-import { ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { NavegacionService } from '../services/navegacion.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [
-    CommonModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    ReactiveFormsModule
-  ],
+  imports: [CommonModule, FormsModule, MatButtonModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  loginForm: FormGroup;
+  email: string = '';
+  password: string = '';
+  error: string = '';
 
   constructor(
-    private fb: FormBuilder,
-    private dialogRef: MatDialogRef<LoginComponent>
-  ) {
-    this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
-    });
-  }
+    private dialogRef: MatDialogRef<LoginComponent>,
+    private dialog: MatDialog,
+    private authService: AuthService,
+    private navegacionService: NavegacionService,
+    private router: Router
+  ) {}
 
   onSubmit() {
-    if (this.loginForm.valid) {
-      console.log('Login:', this.loginForm.value);
-      // Implementar lógica de login
-      this.dialogRef.close();
+    if (!this.email || !this.password) {
+      this.error = 'Por favor, complete todos los campos';
+      return;
     }
+
+    this.authService.login({ email: this.email, password: this.password })
+      .subscribe({
+        next: (response) => {
+          console.log('Login exitoso');
+          this.router.navigate(['/']);
+        },
+        error: (error) => {
+          console.error('Error en login:', error);
+          this.error = error.error?.mensaje || 'Error al iniciar sesión';
+        }
+      });
   }
 
-  cerrarDialog() {
+  abrirRegistro() {
     this.dialogRef.close();
+    this.navegacionService.irARegistro();
   }
 }

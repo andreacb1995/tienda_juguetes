@@ -1,56 +1,77 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
-import { CarritoService } from '../servicios/carrito.service';
+import { CarritoService } from '../services/carrito.service';
+import { Subscription } from 'rxjs';
+import { NavegacionService } from '../services/navegacion.service';
 
 @Component({
   selector: 'app-carrito',
   standalone: true,
-  imports: [
-    CommonModule, 
-    FormsModule, 
-    MatButtonModule, 
-    MatIconModule,
-    RouterModule
-  ],
+  imports: [CommonModule, RouterModule],
   templateUrl: './carrito.component.html',
   styleUrls: ['./carrito.component.css']
 })
-export class CarritoComponent implements OnInit {
+export class CarritoComponent implements OnInit, OnDestroy {
   items: any[] = [];
-  total = 0;
+  total: number = 0;
+  private subscription: Subscription = new Subscription();
 
-  constructor(private carritoService: CarritoService) {}
+  constructor(
+    private carritoService: CarritoService,
+    private navegacionService: NavegacionService
+  ) {}
 
   ngOnInit() {
-    this.carritoService.items$.subscribe(items => {
-      this.items = items;
-      this.calcularTotal();
-    });
+    console.log('Inicializando componente Carrito');
+    this.subscription.add(
+      this.carritoService.carrito$.subscribe(items => {
+        console.log('Carrito actualizado en componente:', items);
+        this.items = items;
+        this.actualizarTotal();
+      })
+    );
+  }
+
+  ngOnDestroy() {
+    console.log('Destruyendo componente Carrito');
+    this.subscription.unsubscribe();
+  }
+
+  actualizarTotal() {
+    this.total = this.carritoService.obtenerTotal();
+    console.log('Total actualizado en componente:', this.total);
   }
 
   incrementarCantidad(item: any) {
-    this.carritoService.incrementarCantidad(item);
+    console.log('Incrementando cantidad para item:', item);
+    this.carritoService.agregarItem(item);
   }
 
   decrementarCantidad(item: any) {
+    console.log('Decrementando cantidad para item:', item);
     this.carritoService.decrementarCantidad(item);
   }
 
   eliminarItem(item: any) {
+    console.log('Eliminando item del carrito:', item);
     this.carritoService.eliminarItem(item);
   }
 
-  calcularTotal() {
-    this.total = this.items.reduce((sum, item) => 
-      sum + (item.precio * item.cantidad), 0);
+  limpiarCarrito() {
+    console.log('Limpiando carrito');
+    this.carritoService.limpiarCarrito();
   }
 
   realizarPedido() {
     console.log('Realizando pedido:', this.items);
-    // Implementar lógica de pedido
+  }
+
+  volverATienda() {
+    console.log('Volviendo a la tienda');
+    this.navegacionService.irAPrincipal();
+  }
+  iraLogin(){
+    this.navegacionService.abrirLogin();
   }
 }

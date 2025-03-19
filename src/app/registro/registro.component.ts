@@ -1,54 +1,70 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
+import { NavegacionService } from '../services/navegacion.service';
+
+interface Usuario {
+  username: string;
+  password: string;
+  nombre: string;
+  apellidos: string;
+  email: string;
+  telefono: string;
+  direccion: {
+    calle: string;
+    numero: string;
+    codigoPostal: string;
+    ciudad: string;
+    provincia: string;
+  };
+}
 
 @Component({
   selector: 'app-registro',
   standalone: true,
-  imports: [
-    CommonModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    ReactiveFormsModule
-  ],
+  imports: [CommonModule, FormsModule],
   templateUrl: './registro.component.html',
   styleUrls: ['./registro.component.css']
 })
 export class RegistroComponent {
-  registroForm: FormGroup;
+  usuario: Usuario = {
+    username: '',
+    password: '',
+    nombre: '',
+    apellidos: '',
+    email: '',
+    telefono: '',
+    direccion: {
+      calle: '',
+      numero: '',
+      codigoPostal: '',
+      ciudad: '',
+      provincia: ''
+    }
+  };
 
   constructor(
-    private fb: FormBuilder,
-    private dialogRef: MatDialogRef<RegistroComponent>
-  ) {
-    this.registroForm = this.fb.group({
-      nombre: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmarPassword: ['', Validators.required]
-    }, { validator: this.passwordMatchValidator });
-  }
-
-  passwordMatchValidator(g: FormGroup) {
-    return g.get('password')?.value === g.get('confirmarPassword')?.value
-      ? null : {'mismatch': true};
-  }
+    private authService: AuthService,
+    private router: Router,
+    private navegacionService: NavegacionService
+  ) {}
 
   onSubmit() {
-    if (this.registroForm.valid) {
-      console.log('Registro:', this.registroForm.value);
-      // Implementar lógica de registro
-      this.dialogRef.close();
-    }
+    console.log('Enviando datos de registro:', this.usuario);
+    this.authService.registro(this.usuario).subscribe({
+      next: (response) => {
+        console.log('Registro exitoso:', response);
+        this.router.navigate(['/']);
+      },
+      error: (error) => {
+        console.error('Error en el registro:', error);
+      }
+    });
   }
 
-  cerrarDialog() {
-    this.dialogRef.close();
+  volverAInicio() {
+    this.navegacionService.irAPrincipal();
   }
 }

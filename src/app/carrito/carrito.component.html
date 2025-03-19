@@ -1,52 +1,44 @@
-<div class="carrito-page">
-  <h1>Mi Carrito</h1>
-  
-  <div class="carrito-contenido" *ngIf="items.length > 0">
-    <div class="items-lista">
-      <div class="carrito-item" *ngFor="let item of items">
-        <img [src]="'assets/imagenes/' + item.imagen" [alt]="item.nombre">
-        <div class="item-detalles">
-          <h3>{{item.nombre}}</h3>
-          <p class="item-precio">{{item.precio | currency:'EUR'}}</p>
-        </div>
-        <div class="item-cantidad">
-          <button (click)="decrementarCantidad(item)">-</button>
-          <span>{{item.cantidad}}</span>
-          <button (click)="incrementarCantidad(item)">+</button>
-        </div>
-        <p class="item-total">{{item.precio * item.cantidad | currency:'EUR'}}</p>
-        <button class="btn-eliminar" (click)="eliminarItem(item)">
-          <mat-icon>close</mat-icon>
-        </button>
-      </div>
-    </div>
+<div class="carrito-container">
+  <div class="volver-container">
+    <button class="btn-volver" (click)="volverATienda()">
+      ← Volver a la tienda
+    </button>
+  </div>
 
-    <div class="carrito-resumen">
-      <h2>Resumen del pedido</h2>
-      <div class="resumen-detalle">
-        <div class="resumen-linea">
-          <span>Subtotal</span>
-          <span>{{total | currency:'EUR'}}</span>
+  <h2 class="carrito-titulo">Mi Carrito</h2>
+  
+  <div class="items-container" *ngIf="items.length > 0">
+    <div class="carrito-item" *ngFor="let item of items">
+      <img [src]="'/assets/imagenes/' + item.imagen" [alt]="item.nombre" class="item-img">
+      <div class="item-info">
+        <h3>{{ item.nombre }}</h3>
+        <p class="precio-item">{{ item.precio }} €</p>
+        <div class="cantidad-control">
+          <button class="btn-cantidad" (click)="decrementarCantidad(item)">-</button>
+          <span>{{ item.cantidad }}</span>
+          <button class="btn-cantidad" (click)="incrementarCantidad(item)">+</button>
         </div>
-        <div class="resumen-linea">
-          <span>Envío</span>
-          <span>Gratis</span>
-        </div>
-        <div class="resumen-total">
-          <span>Total</span>
-          <span>{{total | currency:'EUR'}}</span>
+        <!-- Total por Producto -->
+        <div class="total-item">
+          <span>Total: {{ item.precio * item.cantidad | currency:'EUR' }}</span>
         </div>
       </div>
-      <button class="btn-realizar-pedido" (click)="realizarPedido()">
+      <button class="eliminar" (click)="eliminarItem(item)">×</button>
+    </div>
+    
+    <div class="carrito-acciones">
+      <div class="total-container">
+        <span class="total-label">Total del pedido:</span>
+        <span class="total-amount">{{ total | currency:'EUR' }}</span>
+      </div>
+      <button class="realizar-pedido" (click)="realizarPedido()">
         Realizar Pedido
       </button>
     </div>
   </div>
 
-  <div class="carrito-vacio" *ngIf="items.length === 0">
-    <p>Tu carrito está vacío</p>
-    <button class="btn-seguir-comprando" routerLink="/">
-      Seguir Comprando
-    </button>
+  <div class="seguir-comprando">
+    <p *ngIf="items.length === 0">Tu carrito está vacío</p>
+    <button (click)="volverATienda()">Seguir Comprando</button>
   </div>
 </div>

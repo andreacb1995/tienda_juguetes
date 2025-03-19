@@ -56,52 +56,62 @@
 
 /* Categorías */
 .categorias {
-  margin-top: 80px;
-  text-align: center;
-  padding: 30px;
-  background-color: #FFFFFF;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-  border-radius: 15px;
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  max-width: 1000px;
 }
 
-.categoria-lista {
+.categorias-container {
   display: flex;
   justify-content: center;
-  align-items: center;
-  gap: 40px;
   flex-wrap: wrap;
-  margin: 20px 0;
+  gap: 20px;
+  padding: 10px;
 }
 
-.categoria-item {
-  flex: 0 0 auto;
-  width: 150px;
-  background: none;
-  border: none;
+.categoria-card {
+  width: 130px;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
   cursor: pointer;
-  transition: transform 0.3s ease;
+  transition: all 0.3s ease;
+  padding: 15px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
-.categoria-item img {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  object-fit: cover;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease;
-}
-
-.categoria-item:hover {
+.categoria-card:hover {
   transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  background-color: #CFF281;
 }
 
-.categoria-item p {
-  margin-top: 15px;
-  font-weight: 500;
+.categoria-imagen {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 12px;
+  border: 2px solid #CFF281;
+  padding: 3px;
+  background: white;
+}
+
+.categoria-info {
+  width: 100%;
+}
+
+.categoria-titulo {
+  margin: 0;
+  font-size: 0.95rem;
   color: #333;
+  font-weight: 500;
 }
 
 /* Sección de juguetes */
@@ -142,29 +152,26 @@
 
 .juguete-card img {
   width: 100%;
-  height: 200px;
+  height: 150px;
   object-fit: cover;
   border-radius: 10px;
   margin-bottom: 15px;
 }
 
 .juguete-card h3 {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: #333;
   margin: 0 0 10px 0;
-}
-
-.juguete-card p {
-  color: #666;
-  margin: 0 0 15px 0;
-  flex-grow: 1;
+  flex-grow: 1; 
 }
 
 .juguete-card .precio {
-  font-size: 1.4rem;
+  font-size: 1rem; 
   font-weight: bold;
   color: #2c5282;
-  margin: 10px 0;
+  margin: 0; 
+  text-align: center; 
+  margin-top: auto; 
 }
 
 .btn-comprar {
@@ -179,6 +186,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
+  margin-top: 20px;
 }
 
 .btn-comprar:hover {
@@ -349,23 +357,23 @@
     transform: translateX(-100%);
   }
 
-  .categoria-lista {
-    gap: 20px;
-  }
-
-  .categoria-item {
-    width: 120px;
-  }
-
-  .categoria-item img {
-    width: 100px;
-    height: 100px;
-  }
-
-  .juguetes-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
+  .categorias {
     padding: 15px;
+  }
+  
+  .categoria-card {
+    width: 110px;
+  }
+  
+  .categoria-imagen {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .categorias-container {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -375,7 +383,7 @@
 }
 .destacados h2 {
   font-size: 24px;
-  color: #333; /* Color neutro para el texto */
+  color: #333; 
   font-weight: bold;
   margin-bottom: 20px;
   text-transform: uppercase;
@@ -387,7 +395,7 @@
   display: block;
   width: 50px;
   height: 4px;
-  background-color: #CFF281; /* Línea decorativa en color principal */
+  background-color: #CFF281; 
   margin: 10px auto 0;
 }
 

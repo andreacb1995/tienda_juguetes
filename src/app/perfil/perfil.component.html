@@ -1,0 +1,30 @@
+<div class="perfil-container">
+  <mat-tab-group>
+    <mat-tab label="Datos Personales">
+      <div class="datos-personales" *ngIf="usuario">
+        <h2>Mis Datos</h2>
+        <p><strong>Nombre:</strong> {{usuario.nombre}}</p>
+        <p><strong>Email:</strong> {{usuario.email}}</p>
+        <button mat-raised-button color="primary" (click)="editarPerfil()">
+          Editar Perfil
+        </button>
+      </div>
+    </mat-tab>
+    
+    <mat-tab label="Mis Pedidos">
+      <div class="pedidos-lista">
+        <h2>Historial de Pedidos</h2>
+        <div class="pedido-card" *ngFor="let pedido of pedidos">
+          <p><strong>Fecha:</strong> {{pedido.fecha | date}}</p>
+          <p><strong>Total:</strong> {{pedido.total}} €</p>
+          <div class="productos">
+            <div *ngFor="let producto of pedido.productos">
+              <p>{{producto.nombre}} - {{producto.cantidad}}x - {{producto.precio}} €</p>
+            </div>
+          </div>
+          <p><strong>Estado:</strong> {{pedido.estado}}</p>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

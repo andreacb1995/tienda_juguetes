@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface Juguete {
   _id: string;
   nombre: string;
+  descripcion: string;
   precio: number;
   imagen: string;
-  descripcion: string;
   categoria: string;
-  edad_recomendada: string;
-  dimensiones: string;
-  marca: string;
   stock: number;
 }
 
@@ -18,24 +17,29 @@ export interface Juguete {
   providedIn: 'root'
 })
 export class JuguetesService {
-  private apiUrl = 'https://tienda-juguetes-back.vercel.app/api';
-  private httpOptions = {
-    withCredentials: true
-  };
+  private apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  getNovedades() {
-    return this.http.get<Juguete[]>(`${this.apiUrl}/novedades`, this.httpOptions);
-  }
+  getJuguetesPorCategoria(categoria: string): Observable<Juguete[]> {
+    // Si es novedades o está vacío, usar la ruta de novedades
+    if (categoria === 'novedades' || !categoria) {
+      return this.http.get<Juguete[]>(`${this.apiUrl}/novedades`);
+    }
 
-  getJuguetesPorCategoria(categoria: string) {
-    const endpoint = categoria === 'novedades' ? 'novedades' :
-                    categoria === 'puzles' ? 'puzzles' :
-                    categoria === 'creatividad' ? 'juegos-creatividad' :
-                    categoria === 'madera' ? 'juegos-madera' :
-                    'juegos-mesa';
-    
-    return this.http.get<Juguete[]>(`${this.apiUrl}/${endpoint}`, this.httpOptions);
+    // Para las demás categorías, usar la ruta específica
+    const rutasCategoria: { [key: string]: string } = {
+      'puzzles': '/puzzles',
+      'juegos-creatividad': '/juegos-creatividad',
+      'juegos-mesa': '/juegos-mesa',
+      'juegos-madera': '/juegos-madera'
+    };
+
+    const ruta = rutasCategoria[categoria];
+    if (!ruta) {
+      throw new Error(`Categoría no válida: ${categoria}`);
+    }
+
+    return this.http.get<Juguete[]>(`${this.apiUrl}${ruta}`);
   }
 }

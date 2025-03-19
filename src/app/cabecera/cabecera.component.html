@@ -1,12 +1,29 @@
-<div class="cabecera">
-    <div class="logo" (click)="irAPrincipal()">
-      <!-- Logo -->
-      <img src="assets/imagenes/logo-eduKids.png" alt="Logo">
-    </div>
-    <div class="iconos">
-      <!-- Icono de usuario -->
-      <mat-icon (click)="abrirLogin()">person</mat-icon>
-      <!-- Icono de carrito -->
-      <mat-icon (click)="irACarrito()">shopping_cart</mat-icon>
+<header>
+  <div class="nav-buttons left">
+    <!-- Botón de Login/Registro -->
+    <button class="icon-button" *ngIf="!isLoggedIn" (click)="abrirLogin()">
+      Iniciar Sesión
+    </button>
+  </div>
+
+  <div class="logo" (click)="irAPrincipal()">
+    <img src="assets/imagenes/logo-eduKids.png" alt="Logo de EduKids">
+  </div>
+
+  <div class="nav-buttons right">
+    <!-- Icono de perfil - solo visible si está logueado -->
+    <button class="icon-button" *ngIf="isLoggedIn" (click)="irAPerfil()">
+      <mat-icon>person</mat-icon>
+    </button>
+
+    <!-- Icono del carrito -->
+    <div class="carrito-container">
+      <button class="icon-button" (click)="irACarrito()">
+        <mat-icon>shopping_cart</mat-icon>
+        <span class="carrito-contador" *ngIf="cantidadCarrito > 0">
+          {{cantidadCarrito}}
+        </span>
+      </button>
     </div>
   </div>
+</header>

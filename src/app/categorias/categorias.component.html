@@ -1,44 +1,25 @@
-<!-- src/app/categorias/categorias.component.html -->
-
-<div class="categorias">
-  <div class="categoria-lista">
-    <button class="categoria-item" (click)="cambiarContenido('puzles')">
-      <img src="assets/imagenes/categorias_puzzles.jpg" alt="Puzles">
-      <p>Puzles</p>
-    </button>
-
-    <button class="categoria-item" (click)="cambiarContenido('creatividad')">
-      <img src="assets/imagenes/categorias_creatividad.jpg" alt="Creatividad">
-      <p>Creatividad</p>
-    </button>
-
-    <button class="categoria-item" (click)="cambiarContenido('juegos-mesa')">
-      <img src="assets/imagenes/categorias_juegosMesa.jpg" alt="Juegos de mesa">
-      <p>Juegos de Mesa</p>
-    </button>
-
-    <button class="categoria-item" (click)="cambiarContenido('madera')">
-      <img src="assets/imagenes/categorias_madera.jpg" alt="Juguetes de madera">
-      <p>Madera</p>
-    </button>
+<div class="categorias-container">
+  <div class="categoria-card" *ngFor="let categoria of categorias" (click)="seleccionarCategoria(categoria.id)">
+    <img [src]="'/assets/imagenes/' + categoria.imagen" [alt]="categoria.nombre" class="categoria-imagen">
+    <div class="categoria-info">
+      <h3 class="categoria-titulo">{{categoria.nombre}}</h3>
+    </div>
   </div>
+  <app-carrito-lateral></app-carrito-lateral>
 </div>
 
 <div class="destacados">
   <h2>{{getCategoriaTitle(categoriaActual)}}</h2>
 
-  <!-- Mensaje de error si existe -->
   <div class="error-message" *ngIf="error">
     {{error}}
   </div>
 
-  <!-- Grid de juguetes -->
   <div class="juguetes-grid" *ngIf="juguetesFiltrados.length">
     <div class="juguete-card" *ngFor="let juguete of juguetesFiltrados">
       <img [src]="'assets/imagenes/' + juguete.imagen" [alt]="juguete.nombre">
       <h3>{{juguete.nombre}}</h3>
-      <p>{{juguete.descripcion}}</p>
-      <p class="precio">{{juguete.precio | currency:'EUR'}}</p>
+      <p class="precio">{{juguete.precio}} €</p>
       <p class="stock" [class.sin-stock]="juguete.stock <= 0">
         {{ juguete.stock > 0 ? 'Stock disponible: ' + juguete.stock : 'Sin stock' }}
       </p>
@@ -52,41 +33,4 @@
   </div>
 </div>
 
-<!-- Carrito lateral -->
-<div class="carrito-sidebar" [class.active]="carritoVisible">
-  <div class="carrito-header">
-    <h2>Mi Carrito</h2>
-    <button class="btn-cerrar" (click)="toggleCarrito()">×</button>
-  </div>
-  
-  <div class="carrito-items" *ngIf="itemsCarrito.length > 0">
-    <div class="carrito-item" *ngFor="let item of itemsCarrito">
-      <img [src]="'assets/imagenes/' + item.imagen" [alt]="item.nombre">
-      <div class="item-detalles">
-        <h4>{{item.nombre}}</h4>
-        <p>{{item.precio | currency:'EUR'}}</p>
-      </div>
-      <div class="item-cantidad">
-        <button (click)="decrementarCantidad(item)">-</button>
-        <input type="number" [(ngModel)]="item.cantidad" min="1" (change)="actualizarCarrito()">
-        <button (click)="incrementarCantidad(item)">+</button>
-      </div>
-      <p class="item-total">{{item.precio * item.cantidad | currency:'EUR'}}</p>
-      <button class="btn-eliminar" (click)="eliminarItem(item)">×</button>
-    </div>
-  </div>
 
-  <div class="carrito-vacio" *ngIf="itemsCarrito.length === 0">
-    <p>Tu carrito está vacío</p>
-  </div>
-
-  <div class="carrito-footer">
-    <div class="total">
-      <span>Total:</span>
-      <span class="total-precio">{{totalCarrito | currency:'EUR'}}</span>
-    </div>
-    <button class="btn-realizar-pedido" (click)="realizarPedido()" [disabled]="!itemsCarrito.length">
-      Realizar Pedido
-    </button>
-  </div>
-</div>

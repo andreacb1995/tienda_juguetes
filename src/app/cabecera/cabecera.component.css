@@ -1,33 +1,122 @@
-  .cabecera {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px;
-    height: 60px; 
-    position: relative;
-    background-color: #FFFFFF; /* Blanco puro */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* Sombra sutil */  
-  
-  }
-  
-  .logo img {
-    width: 280px;
-    height: 100%;
-  }
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
 
-  .iconos {
-    position: absolute;
-    right: 20px;
-    display: flex;
-    gap: 10px; 
-  }
-  .iconos mat-icon {
-  background-color: white;
-  color: black;
+.logo {
+  cursor: pointer;
+  align-items: center;
+}
+
+.logo img {
+  height: 50px;
+}
+
+.nav-buttons {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.icon-button {
+  position: relative;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  color: #333;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.icon-button mat-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+}
+
+.icon-button:not(:has(mat-icon)) {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  background-color: #CFF281;
+  color: #333;
+  font-weight: 500;
+}
+
+.icon-button:hover {
+  color: #333;
+  background-color: #CFF281;
   border-radius: 50%;
-  padding: 5px;
-  transition: color 0.3s;
-  }
-  .iconos mat-icon:hover {
-    color: #CFF281;
-  } 
+}
+
+.icon-button:not(:has(mat-icon)):hover {
+  border-radius: 4px;
+  background-color: #bfe371;
+}
+
+.carrito-container {
+  position: relative;
+  display: inline-block;
+}
+
+.carrito-contador {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: #CFF281;
+  color: #333;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  z-index: 1;
+}
+
+mat-icon {
+  vertical-align: middle;
+  line-height: 1;
+}
+
+.cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  height: 60px; 
+  position: relative;
+  background-color: #FFFFFF; 
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);   
+}
+
+.logo img {
+  width: 280px;
+  height: 100%;
+}
+
+.iconos {
+  position: absolute;
+  right: 20px;
+  display: flex;
+  gap: 10px; 
+}
+.iconos mat-icon {
+background-color: white;
+color: black;
+border-radius: 50%;
+padding: 5px;
+transition: color 0.3s;
+}
+.iconos mat-icon:hover {
+  color: #CFF281;
+} 
