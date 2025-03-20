@@ -9,6 +9,8 @@ import { AuthService } from '../services/auth.service';
 import { PedidosService } from '../services/pedidos.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
+import { Router } from '@angular/router';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-carrito',
@@ -24,13 +26,15 @@ export class CarritoComponent implements OnInit, OnDestroy {
   datosEnvioForm: FormGroup = new FormGroup({});    
   mostrarFormulario = false;
   usuarioActual: any = null;
+  procesandoPedido = false;
 
   constructor(
     private carritoService: CarritoService,
     private navegacionService: NavegacionService,
     private fb: FormBuilder,
     private authService: AuthService,
-    private pedidosService: PedidosService
+    private pedidosService: PedidosService,
+    private router: Router
   ) {
     this.crearFormulario();
   }
@@ -143,74 +147,48 @@ export class CarritoComponent implements OnInit, OnDestroy {
     this.mostrarFormulario = true;
   }
 
-  async confirmarPedido() {
-    if (this.datosEnvioForm.valid) {
-      try {
-        const pedido: any = {
-          datosCliente: this.datosEnvioForm.value,
-          productos: this.items.map(item => ({
-            productoId: item._id,
-            categoria: item.categoria,
-            nombre: item.nombre,
-            precio: item.precio,
-            cantidad: item.cantidad
-          })),
+  confirmarPedido() {
+    if (this.datosEnvioForm.valid && !this.procesandoPedido) {
+      this.procesandoPedido = true; // Evita múltiples envíos
+
+      const datosCliente = {
+        nombre: this.datosEnvioForm.get('nombre')?.value,
+        apellidos: this.datosEnvioForm.get('apellidos')?.value,
+        email: this.datosEnvioForm.get('email')?.value,
+        telefono: this.datosEnvioForm.get('telefono')?.value,
+        direccion: this.datosEnvioForm.get('direccion')?.value
+      };
+
+      const productos = this.items.map(item => ({
+        _id: item._id,
+        nombre: item.nombre,
+        precio: item.precio,
+        cantidad: item.cantidad,
+        categoria: item.categoria
+      }));
+
+      this.authService.usuario$.pipe(take(1)).subscribe(usuario => {
+        const pedidoData = {
+          usuarioId: usuario?.id,
+          datosCliente: datosCliente,
+          productos: productos,
           total: this.total
         };
 
-        // Obtener el usuario actual usando firstValueFrom
-        this.authService.obtenerUsuarioActual().subscribe({
-          next: (usuario) => {
-            if (usuario) {
-              pedido.usuarioId = usuario.id;
-            }
-            
-            // Crear el pedido
-            this.pedidosService.crearPedido(pedido).subscribe({
-              next: (resultado) => {
-                if (resultado) {
-                  // Limpiar el carrito
-                  this.carritoService.eliminarTodoDelCarrito();
-                  this.navegacionService.irAPrincipal();
-                }
-              },
-              error: (error) => {
-                console.error('Error al crear pedido:', error);
-                alert('Error al procesar el pedido. Por favor, inténtelo de nuevo.');
-              }
-            });
+        this.pedidosService.crearPedido(pedidoData).subscribe({
+          next: (respuesta) => {
+            this.router.navigate(['/confirmacion-pedido', respuesta.pedido.id]);
+            this.procesandoPedido = false;
           },
           error: (error) => {
-            console.error('Error al obtener usuario:', error);
-            // Continuar con el pedido sin usuario
-            this.pedidosService.crearPedido(pedido).subscribe({
-              next: (resultado) => {
-                if (resultado) {
-                  this.carritoService.eliminarTodoDelCarrito();
-                  alert('Pedido realizado con éxito');
-                  this.navegacionService.irAPrincipal();
-                }
-              },
-              error: (error) => {
-                console.error('Error al crear pedido:', error);
-                alert('Error al procesar el pedido. Por favor, inténtelo de nuevo.');
-              }
-            });
+            console.error('Error al crear pedido:', error);
+            alert('Error al procesar el pedido. Por favor, inténtelo de nuevo.');
+            this.procesandoPedido = false;
           }
         });
-
-      } catch (error) {
-        console.error('Error general:', error);
-        alert('Error al procesar el pedido. Por favor, inténtelo de nuevo.');
-      }
-    } else {
-      alert('Por favor, complete todos los campos requeridos');
-      Object.keys(this.datosEnvioForm.controls).forEach(key => {
-        const control = this.datosEnvioForm.get(key);
-        if (control?.invalid) {
-          control.markAsTouched();
-        }
       });
+    } else {
+      alert('Por favor, complete todos los campos requeridos.');
     }
   }
 }

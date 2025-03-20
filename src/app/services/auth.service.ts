@@ -1,20 +1,31 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { tap, catchError, map } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
+
+export interface Usuario {
+  id: string;
+  username: string;
+  rol: 'admin' | 'usuario';
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private apiUrl = environment.apiUrl;
-  private usuarioActual = new BehaviorSubject<any>(null);
-  usuario$ = this.usuarioActual.asObservable();
-  isLoggedIn$ = this.usuario$.pipe(map(user => !!user));
+  private usuarioSubject = new BehaviorSubject<Usuario | null>(null);
+  usuario$ = this.usuarioSubject.asObservable();
+  private isLoggedInSubject = new BehaviorSubject<boolean>(false);
+  isLoggedIn$ = this.isLoggedInSubject.asObservable();
 
-  constructor(private http: HttpClient) {
-    this.verificarSesion().subscribe();
+  constructor(
+    private http: HttpClient,
+    private router: Router
+  ) {
+    this.verificarSesion();
   }
 
   registro(usuario: any): Observable<any> {
@@ -22,63 +33,64 @@ export class AuthService {
       .pipe(
         tap((respuesta: any) => {
           if (respuesta.usuario) {
-            this.usuarioActual.next(respuesta.usuario);
+            this.usuarioSubject.next(respuesta.usuario);
           }
         })
       );
   }
 
   login(credentials: { username: string; password: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/login`, credentials, { withCredentials: true })
+    return this.http.post<any>(`${this.apiUrl}/auth/login`, credentials, { withCredentials: true })
       .pipe(
-        tap((respuesta: any) => {
-          if (respuesta.usuario) {
-            this.usuarioActual.next(respuesta.usuario); 
+        tap(response => {
+          if (response.usuario) {
+            this.usuarioSubject.next(response.usuario);
+            this.isLoggedInSubject.next(true);
+            
+            // Redirigir según el rol
+            if (response.usuario.rol === 'admin') {
+              this.router.navigate(['/admin']);
+            } else {
+              this.router.navigate(['/']);
+            }
           }
         })
       );
   }
-  
 
-  logout(): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/logout`, {})
+  logout() {
+    return this.http.post(`${this.apiUrl}/auth/logout`, {}, { withCredentials: true })
       .pipe(
         tap(() => {
-          this.usuarioActual.next(null);
+          this.usuarioSubject.next(null);
+          this.isLoggedInSubject.next(false);
+          this.router.navigate(['/']);
         })
       );
   }
 
-  verificarSesion(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/auth/verificar-sesion`, { withCredentials: true })
-      .pipe(
-        tap((respuesta: any) => {
-          console.log('Respuesta verificación:', respuesta);
-          if (respuesta.autenticado && respuesta.usuario) {
-            this.usuarioActual.next(respuesta.usuario);
-          } else {
-            this.usuarioActual.next(null);
+  verificarSesion() {
+    this.http.get<any>(`${this.apiUrl}/auth/verificar`, { withCredentials: true })
+      .subscribe({
+        next: (response) => {
+          if (response.usuario) {
+            this.usuarioSubject.next(response.usuario);
+            this.isLoggedInSubject.next(true);
           }
-        }),
-        catchError(error => {
-          console.error('Error en verificación:', error);
-          this.usuarioActual.next(null);
-          return of({ autenticado: false });
-        })
-      );
+        },
+        error: () => {
+          this.usuarioSubject.next(null);
+          this.isLoggedInSubject.next(false);
+        }
+      });
   }
 
-  cerrarSesion(): Observable<any> {
-    return this.logout();
+  esAdmin(): boolean {
+    const usuario = this.usuarioSubject.value;
+    return usuario?.rol === 'admin';
   }
 
-  estaAutenticado(): boolean {
-    return !!this.usuarioActual.value;
-  }
-
-  obtenerUsuarioActual(): Observable<any> {
-    return this.usuario$.pipe(
-      tap(usuario => console.log('Usuario actual en servicio:', usuario))
-    );
+  obtenerUsuarioActual(): Observable<Usuario | null> {
+    return this.usuario$;
   }
 }

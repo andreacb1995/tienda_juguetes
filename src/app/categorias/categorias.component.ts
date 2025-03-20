@@ -5,6 +5,9 @@ import { JuguetesService, Juguete } from '../services/juguetes.service';
 import { NavegacionService } from '../services/navegacion.service';
 import { CarritoService } from '../services/carrito.service'
 import { CarritoLateralComponent } from '../carrito-lateral/carrito-lateral.component';
+import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 interface ItemCarrito extends Juguete {
   cantidad: number;
@@ -31,7 +34,6 @@ export class CategoriasComponent implements OnInit {
   itemsCarrito: ItemCarrito[] = [];
   totalCarrito = 0;
   cargando: boolean = false;
-
   categorias: Categoria[] = [
     {
       id: 'puzzles',
@@ -54,11 +56,14 @@ export class CategoriasComponent implements OnInit {
       imagen: 'madera.jpg'
     }
   ];
+  private apiUrl = environment.apiUrl;
 
   constructor(
     private juguetesService: JuguetesService,
     private navegacionService: NavegacionService,
-    private carritoService: CarritoService
+    private carritoService: CarritoService,
+    private router: Router,
+    private http: HttpClient
   ) {
     this.navegacionService.cambioCategoria$.subscribe(categoria => {
       this.cambiarContenido(categoria);
@@ -66,13 +71,13 @@ export class CategoriasComponent implements OnInit {
   }
 
   ngOnInit() {
+    //this.carritoService.vaciarCarrito(); 
     this.cambiarContenido('novedades');
     this.carritoService.carrito$.subscribe(items => {
       this.itemsCarrito = [...items]; 
       this.actualizarCarrito();
     });
   }
-  
 
   cambiarContenido(categoria: string): void {
     this.categoriaActual = categoria;
@@ -119,9 +124,8 @@ export class CategoriasComponent implements OnInit {
     return this.carritoService.obtenerStockDisponible(juguete);
   }
 
-  estaDisponible(juguete: Juguete): boolean {
-    const stockDisponible = this.getStockDisponible(juguete);
-    return stockDisponible > 0;
+  estaDisponible(juguete: any): boolean {
+    return juguete.stock > 0;
   }
 
   async agregarAlCarrito(juguete: Juguete) {
@@ -151,5 +155,38 @@ export class CategoriasComponent implements OnInit {
   
   irACarrito() {
     this.navegacionService.irACarrito();
+  }
+
+  cargarCategoria(categoria: string) {
+    this.categoriaActual = categoria;
+    this.error = '';
+    this.cargando = true;
+    
+    this.http.get<any[]>(`${this.apiUrl}/${categoria}`).subscribe({
+      next: (data) => {
+        this.juguetesFiltrados = data;
+        this.cargando = false;
+      },
+      error: (error) => {
+        console.error('Error al cargar juguetes:', error);
+        this.error = 'Error al cargar los juguetes. Por favor, inténtelo de nuevo.';
+        this.juguetesFiltrados = [];
+        this.cargando = false;
+      }
+    });
+  }
+
+  cargarNovedades() {
+    this.cargarCategoria('novedades');
+  }
+
+  agregarAlCarritoCategoria(juguete: any) {
+    if (juguete.stock <= 0) {
+      alert('No hay stock disponible para este producto');
+      return;
+    }
+    
+    this.carritoService.agregarItem(juguete);
+    this.cargarCategoria(this.categoriaActual);
   }
 }

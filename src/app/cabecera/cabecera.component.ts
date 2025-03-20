@@ -22,8 +22,9 @@ import { RegistroComponent } from '../registro/registro.component';
   styleUrls: ['./cabecera.component.css']
 })
 export class CabeceraComponent implements OnInit {
-  cantidadCarrito: number = 0;
   isLoggedIn = false;
+  isAdmin = false;
+  cantidadCarrito: number = 0;
   itemsCarrito: any[] = [];
 
   constructor(
@@ -39,6 +40,10 @@ export class CabeceraComponent implements OnInit {
       loggedIn => this.isLoggedIn = loggedIn
     );
 
+    this.authService.usuario$.subscribe(usuario => {
+      this.isAdmin = usuario?.rol === 'admin';
+    });
+
     this.carritoService.carrito$.subscribe(carrito => {
       this.itemsCarrito = carrito;
       this.actualizarCarrito();
@@ -50,9 +55,15 @@ export class CabeceraComponent implements OnInit {
   }
 
   irAPerfil() {
-    if (this.isLoggedIn) {
+    if (this.isLoggedIn && !this.isAdmin) {
       this.navegacionService.irAPerfil();
-    } 
+    }
+  }
+
+  irAAdmin() {
+    if (this.isAdmin) {
+      this.router.navigate(['/admin']);
+    }
   }
 
   abrirLogin() {
@@ -68,12 +79,18 @@ export class CabeceraComponent implements OnInit {
     });
   }
 
+  cerrarSesion() {
+    this.authService.logout().subscribe();
+    this.abrirLogin();
+  }
+
   irACarrito() {
-    this.navegacionService.irACarrito();
+    if (!this.isAdmin) {
+      this.navegacionService.irACarrito();
+    }
   }
   
   actualizarCarrito() {
     this.cantidadCarrito = this.carritoService.obtenerCantidadTotal();
   }
-  
 }

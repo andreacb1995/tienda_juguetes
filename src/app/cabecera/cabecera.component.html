@@ -4,6 +4,9 @@
     <button class="icon-button" *ngIf="!isLoggedIn" (click)="abrirLogin()">
       Iniciar Sesión
     </button>
+    <button class="icon-button" *ngIf="isLoggedIn" (click)="cerrarSesion()">
+      Cerrar Sesión
+    </button>
   </div>
 
   <div class="logo" (click)="irAPrincipal()">
@@ -11,13 +14,18 @@
   </div>
 
   <div class="nav-buttons right">
-    <!-- Icono de perfil - solo visible si está logueado -->
-    <button class="icon-button" *ngIf="isLoggedIn" (click)="irAPerfil()">
+    <!-- Botón de Admin -->
+    <button class="icon-button" *ngIf="isAdmin" (click)="irAAdmin()">
+      <mat-icon>admin_panel_settings</mat-icon>
+    </button>
+
+    <!-- Icono de perfil - solo visible si está logueado y no es admin -->
+    <button class="icon-button" *ngIf="isLoggedIn && !isAdmin" (click)="irAPerfil()">
       <mat-icon>person</mat-icon>
     </button>
 
-    <!-- Icono del carrito -->
-    <div class="carrito-container">
+    <!-- Icono del carrito - no visible para admin -->
+    <div class="carrito-container" *ngIf="!isAdmin">
       <button class="icon-button" (click)="irACarrito()">
         <mat-icon>shopping_cart</mat-icon>
         <span class="carrito-contador" *ngIf="cantidadCarrito > 0">

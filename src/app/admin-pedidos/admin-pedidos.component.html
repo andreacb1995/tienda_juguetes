@@ -1,0 +1,51 @@
+<div class="admin-pedidos">
+    <div class="pedidos-lista" *ngIf="!cargando">
+      <div class="pedido-card" *ngFor="let pedido of pedidos">
+        <div class="pedido-header">
+          <h3>Pedido #{{pedido._id}}</h3>
+          <span class="fecha">{{pedido.fecha | date:'dd/MM/yyyy HH:mm'}}</span>
+        </div>
+  
+        <div class="cliente-info">
+          <h4>Datos del Cliente</h4>
+          <p>Nombre: {{pedido.datosCliente.nombre}}</p>
+          <p>Email: {{pedido.datosCliente.email}}</p>
+          <p>Teléfono: {{pedido.datosCliente.telefono}}</p>
+          <p>Dirección: {{pedido.datosCliente.direccion}}</p>
+        </div>
+  
+        <div class="productos-lista">
+          <h4>Productos</h4>
+          <div class="producto-item" *ngFor="let producto of pedido.productos">
+            <span>{{producto.nombre}}</span>
+            <span>{{producto.cantidad}} x {{producto.precio}}€</span>
+          </div>
+          <div class="total">
+            <strong>Total: {{pedido.total}}€</strong>
+          </div>
+        </div>
+  
+        <div class="acciones" *ngIf="pedido.estado === 'pendiente'">
+          <button mat-raised-button color="primary" 
+                  (click)="actualizarEstadoPedido(pedido._id, 'aceptado')">
+            Aceptar Pedido
+          </button>
+          <button mat-raised-button color="warn" 
+                  (click)="actualizarEstadoPedido(pedido._id, 'rechazado')">
+            Rechazar Pedido
+          </button>
+        </div>
+        <div class="estado" *ngIf="pedido.estado !== 'pendiente'">
+          Estado: {{pedido.estado}}
+        </div>
+      </div>
+    </div>
+  
+    <div class="loading" *ngIf="cargando">
+      Cargando pedidos...
+    </div>
+  
+    <div class="error" *ngIf="error">
+      {{error}}
+    </div>
+  </div>
