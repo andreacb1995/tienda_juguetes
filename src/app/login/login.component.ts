@@ -16,7 +16,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  email: string = '';
+  username: string = '';
   password: string = '';
   error: string = '';
 
@@ -29,16 +29,14 @@ export class LoginComponent {
   ) {}
 
   onSubmit() {
-    if (!this.email || !this.password) {
+    if (!this.username || !this.password) {
       this.error = 'Por favor, complete todos los campos';
       return;
     }
-
-    this.authService.login({ email: this.email, password: this.password })
+    this.authService.login({ username: this.username, password: this.password })
       .subscribe({
         next: (response) => {
-          console.log('Login exitoso');
-          this.router.navigate(['/']);
+          this.dialogRef.close();
         },
         error: (error) => {
           console.error('Error en login:', error);

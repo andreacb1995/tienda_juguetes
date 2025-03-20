@@ -11,6 +11,7 @@ export interface Juguete {
   imagen: string;
   categoria: string;
   stock: number;
+  coleccion: string;
 }
 
 @Injectable({

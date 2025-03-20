@@ -31,31 +31,49 @@ export class CarritoLateralComponent implements OnInit {
       this.mostrarCarrito = mostrar;
     });
   }
+  
+  async decrementarCantidad(item: any) {
+    if (item.cantidad > 1) {
+      try {
+        // Decrementar la cantidad del producto en el carrito
+        await this.carritoService.eliminarItem(item,1);
+      } catch (error) {
+        console.error('Error al decrementar cantidad:', error);
+      }
+    }
+  }
+  
+  async incrementarCantidad(item: any) {
+    const cantidadEnCarrito = item.cantidad || 0;  
+    const stockDisponible = item.stock;
+
+    // Verificar si la cantidad en el carrito ya alcanzó el stock disponible
+    if (cantidadEnCarrito >= stockDisponible) {
+      console.log('No puedes agregar más de lo que hay en stock.');
+      return; // Si ya se alcanzó el stock, no se incrementa la cantidad
+    }
+    try {
+      // Incrementar la cantidad del producto en el carrito
+      await this.carritoService.agregarItem(item, 1);
+    } catch (error) {
+      console.error('Error al incrementar cantidad:', error);
+    }
+  }
+  
+  async eliminarProducto(item: any) {
+    try {
+      await this.carritoService.eliminarItem(item, item.cantidad);
+    } catch (error) {
+      console.error('Error al eliminar producto:', error);
+    }
+  }
 
   calcularTotal() {
     this.total = this.items.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
   }
 
-  eliminarProducto(item: any) {
-    this.carritoService.eliminarItem(item);
-  }
-
-  decrementarCantidad(item: any) {
-    if (item.cantidad > 1) {
-      item.cantidad--;
-      this.actualizarCarrito();
-    }
-  }
-
-  incrementarCantidad(item: any) {
-    item.cantidad++;
-    this.actualizarCarrito();
-  }
-
   actualizarCarrito() {
     this.calcularTotal();
-    // Actualizar el carrito en el servicio
-    this.carritoService.actualizarCarrito(this.items);
   }
 
   realizarPedido() {
@@ -65,4 +83,6 @@ export class CarritoLateralComponent implements OnInit {
   toggleCarrito() {
     this.carritoService.toggleCarritoLateral();
   }
+
+  
 } 

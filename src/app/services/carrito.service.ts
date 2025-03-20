@@ -3,8 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from './auth.service';
-import { Router, NavigationEnd } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -16,9 +15,8 @@ export class CarritoService {
   carrito$ = this.carritoSubject.asObservable();
   mostrarCarrito$ = this.mostrarCarritoSubject.asObservable();
   private isBrowser: boolean;
-  private sesionTimeout: any;
-  private storageKey: string = 'carritoActual';
-  private estadoCarritoActual: any[] = [];
+  private storageKeyBase: string = 'carritoActual';
+  private usuarioActual: any = null;
 
   constructor(
     private http: HttpClient,
@@ -29,155 +27,153 @@ export class CarritoService {
     this.isBrowser = isPlatformBrowser(platformId);
     
     if (this.isBrowser) {
-      // Cargar el carrito inicial
-      this.cargarCarritoInicial();
-      this.carrito$.subscribe(carrito => {
-        this.estadoCarritoActual = carrito;
-      });
-
-      this.router.events.pipe(
-        filter(event => event instanceof NavigationEnd)
-      ).subscribe((event: NavigationEnd) => {
-        if (event.url === '/carrito') {
-          this.carritoSubject.next(this.estadoCarritoActual);
-        }
-      });
-
-      // Guardar carrito antes de cerrar la página
-      window.addEventListener('beforeunload', () => {
-        if (!this.authService.estaAutenticado()) {
-          this.guardarCarrito(this.estadoCarritoActual);
-        }
+      this.authService.usuario$.subscribe(usuario => {
+        this.usuarioActual = usuario;
+        this.cargarCarritoInicial();
       });
     }
+  }
+
+  private obtenerTodosLosCarritos(): any[] {
+    const carritos: any[] = [];
+    if (this.isBrowser) {
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith(this.storageKeyBase)) {
+          try {
+            const carrito = JSON.parse(localStorage.getItem(key) || '[]');
+            carritos.push(...carrito);
+          } catch (error) {
+            console.error('Error al parsear carrito:', error);
+          }
+        }
+      }
+    }
+    return carritos;
+  }
+
+  private calcularStockDisponible(producto: any): number {
+    const todosLosItems = this.obtenerTodosLosCarritos();
+    const cantidadTotal = todosLosItems.reduce((total, item) => {
+      if (item._id === producto._id && item.categoria === producto.categoria) {
+        return total + item.cantidad;
+      }
+      return total;
+    }, 0);
+    return producto.stock - cantidadTotal;
+  }
+
+  private get storageKey(): string {
+    return this.usuarioActual ? 
+      `${this.storageKeyBase}_${this.usuarioActual.id}` : 
+      this.storageKeyBase;
   }
 
   private cargarCarritoInicial() {
     if (this.isBrowser) {
       const carritoGuardado = localStorage.getItem(this.storageKey);
-  
       if (carritoGuardado) {
         try {
           const carrito = JSON.parse(carritoGuardado);
           this.carritoSubject.next(carrito);
-          this.estadoCarritoActual = carrito;
         } catch (error) {
-          console.error('Error al cargar carrito inicial:', error);
+          console.error('Error al cargar el carrito:', error);
           this.carritoSubject.next([]);
-          this.estadoCarritoActual = [];
         }
       } else {
         this.carritoSubject.next([]);
-        this.estadoCarritoActual = [];
       }
     }
   }
-  
 
-  async agregarItem(producto: any) {
-    try {
-      const carrito = [...this.estadoCarritoActual]; 
-      const itemExistente = carrito.find(item => item._id === producto._id);
-  
-      if (itemExistente) {
-        itemExistente.cantidad += 1;
-      } else {
-        carrito.push({ ...producto, cantidad: 1 });
-      }
-  
-      this.estadoCarritoActual = [...carrito];  
-      this.carritoSubject.next([...this.estadoCarritoActual]); 
-      this.guardarCarrito(this.estadoCarritoActual);
-    } catch (error) {
-      console.error('Error al agregar producto:', error);
-    }
-  }
-  
-  
   private guardarCarrito(carrito: any[]) {
     if (this.isBrowser) {
-      console.log('Guardando carrito en storage:', carrito);
-      if (this.authService.estaAutenticado()) {
-        localStorage.setItem('carritoUsuario', JSON.stringify(carrito));
+      localStorage.setItem(this.storageKey, JSON.stringify(carrito));
+    }
+  }
+
+  obtenerTotal(): number {
+    return this.carritoSubject.value.reduce((total, item) => total + (item.precio * item.cantidad), 0);
+  }
+
+  obtenerCantidadTotal(): number {
+    return this.carritoSubject.value.reduce((total, item) => total + item.cantidad, 0);
+  }
+
+  agregarItem(producto: any, cantidad: number = 1) {
+    const stockDisponible = this.calcularStockDisponible(producto);
+    
+    if (stockDisponible < cantidad) {
+      alert('No hay suficiente stock disponible');
+      return;
+    }
+
+    const carritoActual = this.carritoSubject.value;
+    const productoExistente = carritoActual.find(item => 
+      item._id === producto._id && item.categoria === producto.categoria
+    );
+
+    if (productoExistente) {
+      if (stockDisponible < cantidad) {
+        alert('No hay suficiente stock disponible');
+        return;
+      }
+      productoExistente.cantidad += cantidad;
+    } else {
+      carritoActual.push({ ...producto, cantidad });
+    }
+
+    this.carritoSubject.next([...carritoActual]);
+    this.guardarCarrito(carritoActual);
+  }
+
+  eliminarItem(producto: any, cantidad: number) {
+    const carritoActual = this.carritoSubject.value;
+    const productoExistente = carritoActual.find(item => 
+      item._id === producto._id && item.categoria === producto.categoria
+    );
+
+    if (productoExistente) {
+      if (productoExistente.cantidad <= cantidad) {
+        const nuevoCarrito = carritoActual.filter(item => 
+          !(item._id === producto._id && item.categoria === producto.categoria)
+        );
+        this.carritoSubject.next(nuevoCarrito);
+        this.guardarCarrito(nuevoCarrito);
       } else {
-        sessionStorage.setItem('carritoAnonimo', JSON.stringify(carrito));
+        productoExistente.cantidad -= cantidad;
+        this.carritoSubject.next([...carritoActual]);
+        this.guardarCarrito(carritoActual);
       }
     }
   }
 
-  obtenerCarrito() {
-    return this.estadoCarritoActual;
+  obtenerStockDisponible(producto: any): number {
+    return this.calcularStockDisponible(producto);
   }
 
-  decrementarCantidad(item: any) {
-    const carrito = [...this.estadoCarritoActual];
-    const itemExistente = carrito.find(i => i._id === item._id);
-
-    if (itemExistente && itemExistente.cantidad > 1) {
-      itemExistente.cantidad -= 1;
-      this.carritoSubject.next(carrito);
-      this.guardarCarrito(carrito);
-    }
-  }
-  eliminarItem(item: any) {
-    console.log('Eliminando item del carrito:', item);
-    const carrito = this.carritoSubject.value.filter(i => i._id !== item._id);
-    this.carritoSubject.next(carrito);
-    this.guardarCarrito(carrito);
-    console.log('Estado del carrito después de eliminar:', carrito);
-  }
-  
-  obtenerTotal() {
-    const total = this.estadoCarritoActual.reduce(
-      (total, item) => total + (item.precio * item.cantidad), 
-      0
-    );
-    return total;
-  }
-
-  obtenerCantidadTotal() {
-    const cantidad = this.estadoCarritoActual.reduce(
-      (total, item) => total + item.cantidad, 
-      0
-    );
-    return cantidad;
-  }
-
-  limpiarCarrito() {
-    this.carritoSubject.next([]);
-    this.estadoCarritoActual = [];
-    if (this.isBrowser) {
-      localStorage.removeItem(this.storageKey);
-    }
-  }
-  public actualizarEstadoCarrito() {
-    this.carritoSubject.next(this.estadoCarritoActual);
-  }
-  
-  public obtenerEstadoCarrito() {
-    return this.carrito$.subscribe(carrito => carrito);
-  }
-  
   toggleCarritoLateral() {
     const estadoActual = this.mostrarCarritoSubject.value;
     this.mostrarCarritoSubject.next(!estadoActual);
-    console.log('Toggle carrito lateral:', !estadoActual);
   }
 
   mostrarCarritoLateral() {
     this.mostrarCarritoSubject.next(true);
-    console.log('Mostrando carrito lateral');
   }
 
   ocultarCarritoLateral() {
     this.mostrarCarritoSubject.next(false);
-    console.log('Ocultando carrito lateral');
   }
 
-  actualizarCarrito(items: any[]) {
-    console.log('Actualizando carrito con items:', items);
-    this.carritoSubject.next([...items]);
-    this.guardarCarrito(items);
+  obtenerItems() {
+    return this.carrito$;
+  }
+
+  eliminarTodoDelCarrito() {
+    this.carritoSubject.next([]);
+    if (this.isBrowser) {
+      localStorage.removeItem(this.storageKey);
+    }
   }
 }
 

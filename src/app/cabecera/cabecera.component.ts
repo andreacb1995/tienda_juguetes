@@ -52,13 +52,10 @@ export class CabeceraComponent implements OnInit {
   irAPerfil() {
     if (this.isLoggedIn) {
       this.navegacionService.irAPerfil();
-    } else {
-      this.navegacionService.abrirLogin();
-    }
+    } 
   }
 
   abrirLogin() {
-    console.log('Abriendo modal de login');
     this.navegacionService.abrirLogin();
   }
 

@@ -15,10 +15,12 @@ interface Usuario {
   direccion: {
     calle: string;
     numero: string;
+    piso?: string;
     codigoPostal: string;
     ciudad: string;
     provincia: string;
   };
+  rol?: string;
 }
 
 @Component({
@@ -52,14 +54,13 @@ export class RegistroComponent {
   ) {}
 
   onSubmit() {
-    console.log('Enviando datos de registro:', this.usuario);
     this.authService.registro(this.usuario).subscribe({
       next: (response) => {
-        console.log('Registro exitoso:', response);
         this.router.navigate(['/']);
       },
       error: (error) => {
         console.error('Error en el registro:', error);
+        alert(error.error?.mensaje || 'Error en el registro');
       }
     });
   }

@@ -20,14 +20,14 @@
       <img [src]="'assets/imagenes/' + juguete.imagen" [alt]="juguete.nombre">
       <h3>{{juguete.nombre}}</h3>
       <p class="precio">{{juguete.precio}} €</p>
-      <p class="stock" [class.sin-stock]="juguete.stock <= 0">
-        {{ juguete.stock > 0 ? 'Stock disponible: ' + juguete.stock : 'Sin stock' }}
+      <p class="stock" [class.sin-stock]="!estaDisponible(juguete)">
+        {{ estaDisponible(juguete) ? 'Stock disponible: ' + getStockDisponible(juguete) : 'Sin stock' }}
       </p>
       <button class="btn-comprar" 
               (click)="agregarAlCarrito(juguete)"
-              [disabled]="juguete.stock <= 0">
+              [disabled]="!estaDisponible(juguete)">
         <i class="fas fa-shopping-cart"></i>
-        {{ juguete.stock > 0 ? 'Añadir al carrito' : 'Sin stock' }}
+        {{ estaDisponible(juguete) ? 'Añadir al carrito' : 'Sin stock' }}
       </button>
     </div>
   </div>

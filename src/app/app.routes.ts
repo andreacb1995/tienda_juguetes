@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { CarritoComponent } from './carrito/carrito.component';
 import { PrincipalComponent } from './principal/principal.component';
 import { RegistroComponent } from './registro/registro.component';
-
+import { PerfilComponent } from './perfil/perfil.component';
 export const routes: Routes = [
   {
     path: '',
@@ -15,6 +15,10 @@ export const routes: Routes = [
   {
     path: 'registro',
     component: RegistroComponent
+  },
+  {
+    path: 'perfil',
+    component: PerfilComponent
   },
   {
     path: '**',

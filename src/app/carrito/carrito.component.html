@@ -23,15 +23,100 @@
           <span>Total: {{ item.precio * item.cantidad | currency:'EUR' }}</span>
         </div>
       </div>
-      <button class="eliminar" (click)="eliminarItem(item)">×</button>
+      <button class="eliminar" (click)="eliminarProducto(item)">×</button>
     </div>
     
-    <div class="carrito-acciones">
+    <!-- Formulario de datos de envío -->
+    <div class="datos-envio-container" *ngIf="mostrarFormulario">
+      <h3 class="seccion-titulo">Datos de envío</h3>
+      
+      <!-- Resumen del pedido -->
+      <div class="resumen-pedido">
+        <h4>Resumen del pedido</h4>
+        <div class="resumen-items">
+          <div class="resumen-item" *ngFor="let item of items">
+            <span>{{item.nombre}} (x{{item.cantidad}})</span>
+            <span>{{item.precio * item.cantidad | currency:'EUR'}}</span>
+          </div>
+        </div>
+        <div class="resumen-total">
+          <span>Total a pagar:</span>
+          <span class="total-amount">{{total | currency:'EUR'}}</span>
+        </div>
+      </div>
+
+      <form [formGroup]="datosEnvioForm" (ngSubmit)="confirmarPedido()">
+        <div class="form-section">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="nombre">Nombre</label>
+              <input type="text" id="nombre" formControlName="nombre">
+            </div>
+            <div class="form-group">
+              <label for="apellidos">Apellidos</label>
+              <input type="text" id="apellidos" formControlName="apellidos">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" formControlName="email">
+            </div>
+            <div class="form-group">
+              <label for="telefono">Teléfono</label>
+              <input type="tel" id="telefono" formControlName="telefono">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group grow">
+              <label for="calle">Calle</label>
+              <input type="text" id="calle" formControlName="calle">
+            </div>
+            <div class="form-group">
+              <label for="numero">Número</label>
+              <input type="text" id="numero" formControlName="numero">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="piso">Piso (opcional)</label>
+              <input type="text" id="piso" formControlName="piso">
+            </div>
+            <div class="form-group">
+              <label for="codigoPostal">Código Postal</label>
+              <input type="text" id="codigoPostal" formControlName="codigoPostal">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="ciudad">Ciudad</label>
+              <input type="text" id="ciudad" formControlName="ciudad">
+            </div>
+            <div class="form-group">
+              <label for="provincia">Provincia</label>
+              <input type="text" id="provincia" formControlName="provincia">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" [disabled]="!datosEnvioForm.valid" class="realizar-pedido">
+            Confirmar Pedido
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="carrito-acciones" *ngIf="!mostrarFormulario">
       <div class="total-container">
         <span class="total-label">Total del pedido:</span>
         <span class="total-amount">{{ total | currency:'EUR' }}</span>
       </div>
-      <button class="realizar-pedido" (click)="realizarPedido()">
+      <button class="realizar-pedido" (click)="iniciarPedido()">
         Realizar Pedido
       </button>
     </div>

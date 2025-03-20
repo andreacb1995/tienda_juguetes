@@ -110,30 +110,33 @@ export class CategoriasComponent implements OnInit {
     this.carritoVisible = !this.carritoVisible;
   }
 
+  getCantidadEnCarrito(juguete: Juguete): number {
+    const itemCarrito = this.itemsCarrito.find(item => item._id === juguete._id);
+    return itemCarrito ? itemCarrito.cantidad : 0;
+  }
+
+  getStockDisponible(juguete: Juguete): number {
+    return this.carritoService.obtenerStockDisponible(juguete);
+  }
+
+  estaDisponible(juguete: Juguete): boolean {
+    const stockDisponible = this.getStockDisponible(juguete);
+    return stockDisponible > 0;
+  }
+
   async agregarAlCarrito(juguete: Juguete) {
-    console.log('Agregando producto al carrito:', juguete);
+    const stockDisponible = this.getStockDisponible(juguete);
+    
+    if (stockDisponible <= 0) {
+      alert('No hay stock disponible');
+      return;
+    }
+
     try {
-      await this.carritoService.agregarItem(juguete);
+      await this.carritoService.agregarItem(juguete, 1);
       this.carritoService.mostrarCarritoLateral();
     } catch (error) {
       console.error('Error al agregar al carrito:', error);
-    }
-  }
-
-  eliminarItem(item: ItemCarrito) {
-    this.itemsCarrito = this.itemsCarrito.filter(i => i._id !== item._id);
-    this.actualizarCarrito();
-  }
-
-  incrementarCantidad(item: ItemCarrito) {
-    item.cantidad++;
-    this.actualizarCarrito();
-  }
-
-  decrementarCantidad(item: ItemCarrito) {
-    if (item.cantidad > 1) {
-      item.cantidad--;
-      this.actualizarCarrito();
     }
   }
 
