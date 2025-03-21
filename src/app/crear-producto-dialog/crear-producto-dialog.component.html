@@ -1,0 +1,86 @@
+
+<!-- Título del formulario de creación de juguete -->
+<h1 mat-dialog-title style="text-align: center; color: #2c5282; font-weight: bold;">Agregar Nuevo Juguete</h1>
+
+<!-- Contenido del formulario de creación de juguete -->
+<div mat-dialog-content>
+  <form (ngSubmit)="agregarJuguete()" #jugueteForm="ngForm" class="crear-juguete-form">
+    <!-- Grid del formulario de creación de juguete -->
+    <div class="form-grid">
+      <!-- Campo del formulario de creación de juguete -->
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Nombre</mat-label>
+        <input matInput [(ngModel)]="nuevoJuguete.datos.nombre" name="nombre" required placeholder="Ingrese el nombre del juguete" />
+      </mat-form-field>
+
+      <!-- Campo del formulario de creación de juguete -->
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Precio</mat-label>
+        <input matInput type="number" [(ngModel)]="nuevoJuguete.datos.precio" name="precio" required placeholder="Ingrese el precio" />
+      </mat-form-field>
+
+      <!-- Campo del formulario de creación de juguete -->
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Descripción</mat-label>
+        <textarea matInput [(ngModel)]="nuevoJuguete.datos.descripcion" name="descripcion" required placeholder="Ingrese una descripción"></textarea>
+      </mat-form-field>
+
+      <!-- Campo del formulario de creación de juguete -->
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Edad Recomendada</mat-label>
+        <input matInput [(ngModel)]="nuevoJuguete.datos.edad_recomendada" name="edad_recomendada" required placeholder="Ingrese la edad recomendada" />
+      </mat-form-field>
+
+      <!-- Campo del formulario de creación de juguete -->
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Dimensiones</mat-label>
+        <input matInput [(ngModel)]="nuevoJuguete.datos.dimensiones" name="dimensiones" required placeholder="Ingrese las dimensiones" />
+      </mat-form-field>
+
+      <!-- Campo del formulario de creación de juguete -->
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Marca</mat-label>
+        <input matInput [(ngModel)]="nuevoJuguete.datos.marca" name="marca" required placeholder="Ingrese la marca" />
+      </mat-form-field>
+
+      <!-- Campo del formulario de creación de juguete -->
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Stock</mat-label>
+        <input matInput type="number" [(ngModel)]="nuevoJuguete.datos.stock" name="stock" required placeholder="Ingrese el stock" />
+      </mat-form-field>
+
+      <!-- Campo del formulario de creación de juguete -->
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Categoría</mat-label>
+        <mat-select [(ngModel)]="nuevoJuguete.categoria" name="categoria" required>
+          <mat-option value="novedades">Novedades</mat-option>
+          <mat-option value="puzzles">Puzzles</mat-option>
+          <mat-option value="juegos-creatividad">Juegos de Creatividad</mat-option>
+          <mat-option value="juegos-mesa">Juegos de Mesa</mat-option>
+          <mat-option value="juegos-madera">Juegos de Madera</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <!-- Sección de subida de archivo del formulario de creación de juguete -->
+    <div class="file-upload-section">
+      <input type="file" (change)="onFileSelected($event)" class="file-input" id="fileInput" />
+      <label for="fileInput" class="file-upload-label">
+        <mat-icon>cloud_upload</mat-icon> Subir Imagen
+      </label>
+      <div class="image-preview">
+        <img *ngIf="nuevoJuguete.datos.imagenPreview" [src]="nuevoJuguete.datos.imagenPreview" alt="Vista previa" class="preview-img" />
+      </div>
+    </div>
+
+    <!-- Grid de acciones del formulario de creación de juguete -->
+    <div class="form-actions">
+      <!-- Botón del formulario de creación de juguete -->
+      <button mat-raised-button color="warn" type="button" (click)="irAAdmin()">Cancelar</button>
+      <!-- Botón del formulario de creación de juguete -->
+      <button mat-raised-button color="primary" type="submit">
+        <mat-icon>add</mat-icon> Agregar Juguete
+      </button>
+    </div>
+  </form>
+</div>

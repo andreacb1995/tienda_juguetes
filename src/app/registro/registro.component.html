@@ -1,45 +1,72 @@
+<!-- Contenedor de registro -->
 <div class="registro-container">
+  <!-- Contenedor de volver -->
   <div class="volver-container">
+    <!-- Botón de volver -->
     <button class="btn-volver" (click)="volverAInicio()">
       ← Volver a la tienda
     </button>
   </div>
 
+  <!-- Título de registro -->
   <h2 class="registro-titulo">Registro de Usuario</h2>
+  <!-- Formulario de registro -->
   <form (ngSubmit)="onSubmit()">
     <!-- Sección Datos de Acceso -->
     <div class="form-section">
+      <!-- Título de la sección -->
       <h3>Datos de acceso</h3>
+      <!-- Grupo de formulario -->
       <div class="form-group">
+        <!-- Etiqueta del formulario -->
         <label for="username">Usuario</label>
+        <!-- Input del formulario -->
         <input type="text" id="username" [(ngModel)]="usuario.username" name="username" required>
       </div>
+      <!-- Grupo de formulario -->
       <div class="form-group">
+        <!-- Etiqueta del formulario -->
         <label for="password">Contraseña</label>
+        <!-- Input del formulario -->
         <input type="password" id="password" [(ngModel)]="usuario.password" name="password" required>
       </div>
     </div>
 
     <!-- Sección Datos Personales -->
     <div class="form-section">
+      <!-- Título de la sección -->
       <h3>Datos personales</h3>
+      <!-- Fila de formulario -->
       <div class="form-row">
+        <!-- Grupo de formulario -->
         <div class="form-group">
+          <!-- Etiqueta del formulario -->
           <label for="nombre">Nombre</label>
+          <!-- Input del formulario -->
           <input type="text" id="nombre" [(ngModel)]="usuario.nombre" name="nombre" required>
         </div>
+        <!-- Grupo de formulario -->
         <div class="form-group">
+          <!-- Etiqueta del formulario -->
           <label for="apellidos">Apellidos</label>
+          <!-- Input del formulario -->
           <input type="text" id="apellidos" [(ngModel)]="usuario.apellidos" name="apellidos" required>
         </div>
       </div>
+      <!-- Fila de formulario -->
       <div class="form-row">
+        <!-- Grupo de formulario -->
         <div class="form-group">
+          <!-- Etiqueta del formulario -->
           <label for="email">Email</label>
+          <!-- Input del formulario -->
           <input type="email" id="email" [(ngModel)]="usuario.email" name="email" required>
         </div>
+        <!-- Grupo de formulario -->
         <div class="form-group">
+          <!-- Etiqueta del formulario -->
           <label for="telefono">Teléfono</label>
+          <!-- Input del formulario -->
           <input type="tel" id="telefono" [(ngModel)]="usuario.telefono" name="telefono" required>
         </div>
       </div>
@@ -47,29 +74,47 @@
 
     <!-- Sección Dirección -->
     <div class="form-section">
+      <!-- Título de la sección -->
       <h3>Dirección</h3>
+      <!-- Fila de formulario -->
       <div class="form-row">
+        <!-- Grupo de formulario -->
         <div class="form-group grow">
+          <!-- Etiqueta del formulario -->
           <label for="calle">Calle</label>
+          <!-- Input del formulario -->
           <input type="text" id="calle" [(ngModel)]="usuario.direccion.calle" name="calle" required>
         </div>
+        <!-- Grupo de formulario -->
         <div class="form-group">
+          <!-- Etiqueta del formulario -->
           <label for="numero">Número</label>
+          <!-- Input del formulario -->
           <input type="text" id="numero" [(ngModel)]="usuario.direccion.numero" name="numero" required>
         </div>
       </div>
+      <!-- Fila de formulario -->
       <div class="form-row">
+        <!-- Grupo de formulario -->
         <div class="form-group">
+          <!-- Etiqueta del formulario -->
           <label for="codigoPostal">Código Postal</label>
+          <!-- Input del formulario -->
           <input type="text" id="codigoPostal" [(ngModel)]="usuario.direccion.codigoPostal" name="codigoPostal" required>
         </div>
+        <!-- Grupo de formulario -->
         <div class="form-group">
+          <!-- Etiqueta del formulario -->
           <label for="ciudad">Ciudad</label>
+          <!-- Input del formulario -->
           <input type="text" id="ciudad" [(ngModel)]="usuario.direccion.ciudad" name="ciudad" required>
         </div>
       </div>
+      <!-- Grupo de formulario -->
       <div class="form-group">
+        <!-- Etiqueta del formulario -->
         <label for="provincia">Provincia</label>
+        <!-- Input del formulario -->
         <input type="text" id="provincia" [(ngModel)]="usuario.direccion.provincia" name="provincia" required>
       </div>
     </div>

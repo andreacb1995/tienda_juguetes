@@ -1,3 +1,5 @@
+
+/* Estilos para el contenedor de la página de administración */
 .admin-container {
   max-width: 1200px;
   margin: 20px auto;
@@ -7,6 +9,7 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
+/* Estilos para el encabezado de la página de administración */
 .header-admin {
   display: flex;
   justify-content: space-between;
@@ -15,30 +18,10 @@
   padding: 0 1rem;
 }
 
+/* Estilos para el título de la página de administración */
 h1 {
   font-size: 1.8rem;
   color: #2d3748;
   text-align: center;
   margin: 1.5rem 0;
-}
-
-::ng-deep .mat-tab-group {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-::ng-deep .mat-tab-header {
-  border-bottom: 1px solid #e2e8f0;
-  margin-bottom: 20px;
-}
-
-::ng-deep .mat-tab-label {
-  height: 48px !important;
-  padding: 0 24px !important;
-  opacity: 1 !important;
-}
-
-::ng-deep .mat-tab-body-content {
-  padding: 20px;
 }

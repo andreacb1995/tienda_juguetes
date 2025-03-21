@@ -1,4 +1,7 @@
+
+<!-- Cabecera de la página -->
 <header>
+  <!-- Botones de navegación a la izquierda -->
   <div class="nav-buttons left">
     <!-- Botón de Login/Registro -->
     <button class="icon-button" *ngIf="!isLoggedIn" (click)="abrirLogin()">
@@ -7,6 +10,7 @@
     </button>
   </div>
 
+  <!-- Logo de la página -->
   <div class="logo" (click)="irAPrincipal()">
     <img src="assets/imagenes/logo-eduKids.png" alt="Logo de EduKids">
   </div>

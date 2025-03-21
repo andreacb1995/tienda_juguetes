@@ -1,20 +1,26 @@
-  <div class="admin-container">
-    <div class="header-admin">
-      <button class="btn-volver" (click)="volverAInicio()">
-        ← Volver a la tienda
+<!-- Contenedor de la página de administración -->    
+<div class="admin-container">
+  <!-- Encabezado de la página de administración -->
+  <div class="header-admin">
+    <!-- Botón para volver a la tienda -->
+    <button class="btn-volver" (click)="volverAInicio()">
+      ← Volver a la tienda
       </button>
       <button class="btn-cerrar-sesion" *ngIf="isLoggedIn" (click)="cerrarSesion()">
         <span>Cerrar Sesión</span>
     </button>
-    </div>
-
-      <h1>Panel de Administración</h1>
-      <mat-tab-group>
-        <mat-tab label="Gestión de Productos">
+  </div>
+  <!-- Título de la página de administración -->
+  <h1>Panel de Administración</h1>
+  <!-- Grupo de pestañas para la gestión de productos y pedidos -->
+  <mat-tab-group>
+    <!-- Pestaña para la gestión de productos -->
+    <mat-tab label="Gestión de Productos">
           <app-admin-productos></app-admin-productos>
-        </mat-tab>
-        <mat-tab label="Gestión de Pedidos">
-          <app-admin-pedidos></app-admin-pedidos>
-        </mat-tab>
-      </mat-tab-group>
+      </mat-tab>
+      <!-- Pestaña para la gestión de pedidos -->
+      <mat-tab label="Gestión de Pedidos">
+        <app-admin-pedidos></app-admin-pedidos>
+      </mat-tab>
+    </mat-tab-group>
     </div>

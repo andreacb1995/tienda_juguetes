@@ -1,29 +1,43 @@
+<!-- Contenedor del carrito de compras -->
 <div class="carrito-container">
+  <!-- Botón para volver a la tienda -->
   <div class="volver-container">
     <button class="btn-volver" (click)="volverATienda()">
       ← Volver a la tienda
     </button>
   </div>
 
+  <!-- Título del carrito de compras -->
   <h2 class="carrito-titulo">Mi Carrito</h2>
   
+  <!-- Contenedor de los items del carrito -->
   <div class="items-container" *ngIf="items.length > 0">
+    <!-- Item del carrito -->
     <div class="carrito-item" *ngFor="let item of items">
+      <!-- Imagen del item -->
       <img [src]="'/assets/imagenes/' + item.imagen" [alt]="item.nombre" class="item-img">
+      <!-- Información del item -->
       <div class="item-info">
+        <!-- Nombre del item -->
         <h3>{{ item.nombre }}</h3>
+        <!-- Precio del item -->
         <p class="precio-item">{{ item.precio }} €</p>
+        <!-- Contenedor de los botones de cantidad -->
         <div class="cantidad-control">
+          <!-- Botón para decrementar la cantidad -->
           <button class="btn-cantidad" (click)="decrementarCantidad(item)">-</button>
+          <!-- Cantidad del item -->
           <span>{{ item.cantidad }}</span>
+          <!-- Botón para incrementar la cantidad -->
           <button class="btn-cantidad" (click)="incrementarCantidad(item)">+</button>
         </div>
         <!-- Total por Producto -->
         <div class="total-item">
           <span>Total: {{ item.precio * item.cantidad | currency:'EUR' }}</span>
         </div>
+        <!-- Botón para eliminar el item -->  
+        <button class="eliminar" (click)="eliminarProducto(item)">×</button>
       </div>
-      <button class="eliminar" (click)="eliminarProducto(item)">×</button>
     </div>
     
     <!-- Formulario de datos de envío -->
@@ -32,78 +46,125 @@
       
       <!-- Resumen del pedido -->
       <div class="resumen-pedido">
+        <!-- Título del resumen del pedido -->
         <h4>Resumen del pedido</h4>
+        <!-- Contenedor de los items del resumen del pedido -->
         <div class="resumen-items">
+          <!-- Item del resumen del pedido -->
           <div class="resumen-item" *ngFor="let item of items">
+            <!-- Nombre del item -->
             <span>{{item.nombre}} (x{{item.cantidad}})</span>
+            <!-- Precio del item -->
             <span>{{item.precio * item.cantidad | currency:'EUR'}}</span>
           </div>
         </div>
+        <!-- Total del resumen del pedido -->
         <div class="resumen-total">
+          <!-- Etiqueta de total -->
           <span>Total a pagar:</span>
+          <!-- Total del resumen del pedido -->
           <span class="total-amount">{{total | currency:'EUR'}}</span>
         </div>
       </div>
 
+      <!-- Formulario de datos de envío -->
       <form [formGroup]="datosEnvioForm" (ngSubmit)="confirmarPedido()">
+        <!-- Contenedor de la sección de datos de envío -->
         <div class="form-section">
+          <!-- Contenedor de la fila de datos de envío -->
           <div class="form-row">
+            <!-- Contenedor de la sección de datos de envío -->
             <div class="form-group">
+              <!-- Etiqueta de nombre -->
               <label for="nombre">Nombre</label>
+              <!-- Input de nombre -->
               <input type="text" id="nombre" formControlName="nombre">
             </div>
+            <!-- Contenedor de la sección de datos de envío -->
             <div class="form-group">
+              <!-- Etiqueta de apellidos -->
               <label for="apellidos">Apellidos</label>
+              <!-- Input de apellidos -->
               <input type="text" id="apellidos" formControlName="apellidos">
             </div>
           </div>
 
+          <!-- Contenedor de la fila de datos de envío -->
           <div class="form-row">
+            <!-- Contenedor de la sección de datos de envío -->
             <div class="form-group">
+              <!-- Etiqueta de email -->
               <label for="email">Email</label>
+              <!-- Input de email -->
               <input type="email" id="email" formControlName="email">
             </div>
+            <!-- Contenedor de la sección de datos de envío -->
             <div class="form-group">
+              <!-- Etiqueta de teléfono -->
               <label for="telefono">Teléfono</label>
+              <!-- Input de teléfono -->
               <input type="tel" id="telefono" formControlName="telefono">
             </div>
           </div>
 
+          <!-- Contenedor de la fila de datos de envío -->
           <div class="form-row">
+            <!-- Contenedor de la sección de datos de envío -->
             <div class="form-group grow">
+              <!-- Etiqueta de calle -->
               <label for="calle">Calle</label>
+              <!-- Input de calle -->
               <input type="text" id="calle" formControlName="calle">
             </div>
+            <!-- Contenedor de la sección de datos de envío -->
             <div class="form-group">
+              <!-- Etiqueta de número -->
               <label for="numero">Número</label>
+              <!-- Input de número -->
               <input type="text" id="numero" formControlName="numero">
             </div>
           </div>
 
+          <!-- Contenedor de la fila de datos de envío -->
           <div class="form-row">
+            <!-- Contenedor de la sección de datos de envío -->
             <div class="form-group">
+              <!-- Etiqueta de piso -->
               <label for="piso">Piso (opcional)</label>
+              <!-- Input de piso -->
               <input type="text" id="piso" formControlName="piso">
             </div>
+            <!-- Contenedor de la sección de datos de envío -->
             <div class="form-group">
+              <!-- Etiqueta de código postal -->
               <label for="codigoPostal">Código Postal</label>
+              <!-- Input de código postal -->
               <input type="text" id="codigoPostal" formControlName="codigoPostal">
             </div>
           </div>
 
+          <!-- Contenedor de la fila de datos de envío -->
           <div class="form-row">
+            <!-- Contenedor de la sección de datos de envío -->
             <div class="form-group">
+              <!-- Etiqueta de ciudad -->
               <label for="ciudad">Ciudad</label>
+              <!-- Input de ciudad -->
               <input type="text" id="ciudad" formControlName="ciudad">
             </div>
+            <!-- Contenedor de la sección de datos de envío -->
             <div class="form-group">
+              <!-- Etiqueta de provincia -->
               <label for="provincia">Provincia</label>
+              <!-- Input de provincia -->
               <input type="text" id="provincia" formControlName="provincia">
             </div>
           </div>
         </div>
 
+        <!-- Contenedor de las acciones de la sección de datos de envío -->
         <div class="form-actions">
+          <!-- Botón para confirmar el pedido -->
           <button type="submit" [disabled]="!datosEnvioForm.valid" class="realizar-pedido">
             Confirmar Pedido
           </button>
@@ -111,19 +172,26 @@
       </form>
     </div>
 
+    <!-- Contenedor de las acciones del carrito -->
     <div class="carrito-acciones" *ngIf="!mostrarFormulario">
+      <!-- Contenedor de la cantidad del carrito -->
       <div class="total-container">
+        <!-- Etiqueta de total -->
         <span class="total-label">Total del pedido:</span>
         <span class="total-amount">{{ total | currency:'EUR' }}</span>
       </div>
+      <!-- Botón para iniciar el pedido -->
       <button class="realizar-pedido" (click)="iniciarPedido()">
         Realizar Pedido
       </button>
     </div>
   </div>
 
-  <div class="seguir-comprando">
+  <!-- Contenedor de la sección de seguir comprando -->
+    <div class="seguir-comprando">
+    <!-- Etiqueta de seguir comprando -->
     <p *ngIf="items.length === 0">Tu carrito está vacío</p>
+    <!-- Botón para volver a la tienda -->
     <button (click)="volverATienda()">Seguir Comprando</button>
   </div>
 </div>

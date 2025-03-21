@@ -9,6 +9,8 @@ import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
+
+/* Servicio de carrito */   
 export class CarritoService {
   private carritoSubject = new BehaviorSubject<any[]>([]);
   private mostrarCarritoSubject = new BehaviorSubject<boolean>(false);
@@ -43,6 +45,7 @@ export class CarritoService {
       this.storageKeyBase;
   }
 
+  /* Método para cargar el carrito inicial */
   private cargarCarritoInicial() {
     if (this.isBrowser) {
       const carritoGuardado = localStorage.getItem(this.storageKey);
@@ -60,6 +63,7 @@ export class CarritoService {
     }
   }
 
+  /* Método para guardar el carrito */
   private guardarCarrito(carrito: any[]) {
     if (this.isBrowser) {
       localStorage.setItem(this.storageKey, JSON.stringify(carrito));
@@ -67,6 +71,7 @@ export class CarritoService {
     }
   }
 
+  /* Método para actualizar el stock */
   private actualizarStock(productos: any[]) {
     return this.http.post(`${this.apiUrl}/stock/reservar`, { productos })
       .pipe(
@@ -77,10 +82,12 @@ export class CarritoService {
       );
   }
 
+  /* Método para obtener el stock disponible */
   obtenerStockDisponible(producto: any): number {
     return producto.stock;
   }
 
+  /* Método para agregar un item al carrito */
   agregarItem(producto: any, cantidad: number = 1) {
     if (producto.stock < cantidad) {
       alert('No hay suficiente stock disponible');
@@ -115,6 +122,7 @@ export class CarritoService {
     });
   }
 
+  /* Método para eliminar un item del carrito */
   eliminarItem(producto: any, cantidad: number = 1) {
     const carritoActual = this.carritoSubject.value;
     const productoExistente = carritoActual.find(item => 
@@ -149,12 +157,13 @@ export class CarritoService {
     });
   }
 
+  /* Método para eliminar un item del carrito */
   eliminarDelCarrito(producto: any) {
     const carritoActual = this.carritoSubject.value;
     const productoParaStock = {
       _id: producto._id,
-      categoria: producto.categoria, // Usar la categoría directamente
-      cantidad: producto.cantidad // Cantidad positiva para devolver al stock
+      categoria: producto.categoria, 
+      cantidad: producto.cantidad 
     };
 
     this.actualizarStock([productoParaStock]).subscribe({
@@ -172,18 +181,22 @@ export class CarritoService {
     });
   }
 
+  /* Método para obtener el total del carrito */
   obtenerTotal(): number {
     return this.carritoSubject.value.reduce((total, item) => total + (item.precio * item.cantidad), 0);
   }
 
+  /* Método para obtener la cantidad total del carrito */
   obtenerCantidadTotal(): number {
     return this.carritoSubject.value.reduce((total, item) => total + item.cantidad, 0);
   }
 
+  /* Método para obtener los items del carrito */
   obtenerItems() {
     return this.carrito$;
   }
 
+  /* Método para eliminar todo el carrito */
   eliminarTodoDelCarrito() {
     const carritoActual = this.carritoSubject.value;
     // Devolver todo el stock sumando las cantidades
@@ -202,23 +215,27 @@ export class CarritoService {
     });
   }
 
+  /* Método para alternar el carrito lateral */
   toggleCarritoLateral() {
     const estadoActual = this.mostrarCarritoSubject.value;
     this.mostrarCarritoSubject.next(!estadoActual);
   }
 
+  /* Método para mostrar el carrito lateral */
   mostrarCarritoLateral() {
     this.mostrarCarritoSubject.next(true);
   }
 
+  /* Método para ocultar el carrito lateral */
   ocultarCarritoLateral() {
     this.mostrarCarritoSubject.next(false);
   }
 
+  /* Método para vaciar el carrito */
   vaciarCarrito() {
     this.carritoSubject.next([]); 
     if (this.isBrowser) {
-      localStorage.removeItem(this.storageKey); // Borra el carrito del almacenamiento local
+      localStorage.removeItem(this.storageKey); 
     }
   }
   

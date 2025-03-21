@@ -1,3 +1,5 @@
+
+/* Estilos para el footer */
 .footer {
     background-color: #f5f5f5;
     color: #333;
@@ -7,16 +9,19 @@
     border-top: 1px solid #e0e0e0;
 }
 
+/* Estilos para el contenido del footer */
 .footer-content {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
 }
 
+/* Estilos para los enlaces del footer */
 .footer-links {
     margin-top: 15px;
 }
 
+/* Estilos para los enlaces del footer */
 .footer-links a {
     color: #666;
     text-decoration: none;
@@ -25,10 +30,12 @@
     transition: color 0.3s ease;
 }
 
+/* Estilos para los enlaces del footer al pasar el cursor */    
 .footer-links a:hover {
     color: #4CAF50;
 }
 
+/* Estilos para el párrafo del footer */
 .footer p {
     margin: 10px 0 0;
     font-size: 14px;

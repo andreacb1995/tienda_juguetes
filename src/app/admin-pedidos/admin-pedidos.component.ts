@@ -18,10 +18,12 @@ export class AdminPedidosComponent implements OnInit {
 
   constructor(private pedidosService: PedidosService, private snackBar: MatSnackBar) {}
 
+  // Método del ciclo de vida OnInit, se ejecuta al inicializar el componente
   ngOnInit() {
     this.cargarPedidos();
   }
 
+  // Método para cargar los pedidos
   cargarPedidos() {
     this.cargando = true;
     this.pedidosService.obtenerTodosPedidos().subscribe({
@@ -41,6 +43,7 @@ export class AdminPedidosComponent implements OnInit {
     });
   }
 
+  // Método para actualizar el estado de un pedido
   actualizarEstadoPedido(pedidoId: string, estado: 'aceptado' | 'rechazado') {
     this.pedidosService.actualizarEstadoPedido(pedidoId, estado).subscribe({
       next: () => {

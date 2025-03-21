@@ -1,22 +1,26 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { CommonModule } from '@angular/common';
 import { JuguetesService } from '../services/juguetes.service';
-import { CarritoService } from '../services/carrito.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { CrearProductoDialogComponent } from '../crear-producto-dialog/crear-producto-dialog.component';
+import { Router } from '@angular/router';
+import { NavegacionService } from '../services/navegacion.service';
 
 @Component({
   selector: 'app-admin-productos',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
-    MatButtonModule,
+    MatFormFieldModule,
     MatInputModule,
-    MatSelectModule
+    MatSelectModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   templateUrl: './admin-productos.component.html',
   styleUrls: ['./admin-productos.component.css']
@@ -29,34 +33,18 @@ export class AdminProductosComponent implements OnInit {
     { id: 'juegos-mesa', nombre: 'Juegos de Mesa' },
     { id: 'juegos-madera', nombre: 'Juegos de Madera' }
   ];
-  
   categoriaSeleccionada = 'novedades';
   productos: any[] = [];
   cargando = false;
   error = '';
-  mostrarFormulario = false;
-
-    // Objeto para almacenar los datos del nuevo juguete
-  nuevoJuguete: any = {
-    categoria: 'novedades', // Categoría seleccionada
-    datos: { // Datos del juguete
-        nombre: '',
-        precio: 0,
-        imagen: '',
-        categoria: 'novedades',
-        descripcion: '',
-        edad_recomendada: '',
-        dimensiones: '',
-        marca: '',
-        stock: 0
-    }
-  };
 
   constructor(
     private juguetesService: JuguetesService,
-    private carritoService: CarritoService,
-    private snackBar: MatSnackBar
-  ) {}
+    public dialog: MatDialog,
+    private snackBar: MatSnackBar,
+    private router: Router,
+    private navegacionService: NavegacionService
+    ) {}  
 
   ngOnInit() {
     this.cargarProductos();
@@ -67,14 +55,13 @@ export class AdminProductosComponent implements OnInit {
     this.juguetesService.getJuguetesPorCategoria(this.categoriaSeleccionada)
       .subscribe({
         next: (productos) => {
-          // Actualizar el stock teniendo en cuenta los carritos
           this.productos = productos.map(producto => ({
             ...producto,
-            stockReal: this.carritoService.obtenerStockDisponible(producto)
+            stockReal: producto.stock
           }));
           this.cargando = false;
         },
-        error: (error) => {
+        error: () => {
           this.error = 'Error al cargar los productos';
           this.cargando = false;
         }
@@ -82,73 +69,34 @@ export class AdminProductosComponent implements OnInit {
   }
 
   actualizarStock(producto: any) {
-    this.juguetesService.actualizarStock(
-      this.categoriaSeleccionada,
-      producto._id,
-      producto.stock
-    ).subscribe({
-      next: () => {
-        this.mostrarMensajeExito('Stock actualizado correctamente');
-        this.cargarProductos(); // Recargar para obtener el stock actualizado
-      },
-      error: (error) => {
-        this.mostrarMensajeError('Error al actualizar el stock');
-      }
-    });
+    this.juguetesService.actualizarStock(this.categoriaSeleccionada, producto._id, producto.stock)
+      .subscribe({
+        next: () => {
+          this.mostrarMensajeExito('Stock actualizado correctamente');
+          this.cargarProductos();
+        },
+        error: () => {
+          this.mostrarMensajeError('Error al actualizar el stock');
+        }
+      });
   }
 
   onCategoriaChange() {
     this.cargarProductos();
   }
 
-  // Método para agregar un nuevo juguete
-  agregarJuguete() {
-    this.cargando = true;
-    this.juguetesService.agregarJuguete(this.nuevoJuguete)
-        .subscribe({
-          next: (juguete) => {
-              this.mostrarMensajeExito('Juguete agregado exitosamente');
-              this.cargarProductos(); // Recargar la lista de productos
-              this.cargando = false;
-              this.nuevoJuguete = { // Reiniciar el formulario
-                  categoria: 'novedades',
-                  datos: {
-                      nombre: '',
-                      precio: 0,
-                      imagen: '',
-                      categoria: 'novedades',
-                      descripcion: '',
-                      edad_recomendada: '',
-                      dimensiones: '',
-                      marca: '',
-                      stock: 0
-                  }
-              };
-          },
-          error: (error) => {
-            this.error = 'Error al agregar el juguete';
-            this.cargando = false;
-        }
-    });
+  abrirAgregarJuguete() {
+    this.navegacionService.IraCrearJuguete();
   }
 
-      // Método para mostrar mensajes de éxito
   mostrarMensajeExito(mensaje: string) {
-    this.snackBar.open(mensaje, 'Cerrar', {
-      duration: 3000, 
-      panelClass: ['snackbar-exito'], 
-    });
+    this.snackBar.open(mensaje, 'Cerrar', { duration: 3000, panelClass: ['snackbar-exito'] });
   }
 
-  // Método para mostrar mensajes de error
   mostrarMensajeError(mensaje: string) {
-    this.snackBar.open(mensaje, 'Cerrar', {
-      duration: 3000, 
-      panelClass: ['snackbar-error'], 
-    });
+    this.snackBar.open(mensaje, 'Cerrar', { duration: 3000, panelClass: ['snackbar-error'] });
   }
+}
 
-  toggleFormulario() {
-    this.mostrarFormulario = !this.mostrarFormulario;
-  }
-} 
+
+

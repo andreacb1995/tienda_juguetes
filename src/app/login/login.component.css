@@ -1,3 +1,4 @@
+/* Contenedor del formulario de login */
 .login-container {
   width: 100%;
   padding: 2rem;
@@ -5,22 +6,26 @@
   background: white;
 }
 
+/* Título del formulario de login */
 h2 {
   text-align: center;
   margin-bottom: 2rem;
   color: #333;
 }
 
+/* Grupo de formulario de login */
 .form-group {
   margin-bottom: 1.5rem;
 }
 
+/* Etiqueta del formulario de login */
 label {
   display: block;
   margin-bottom: 0.5rem;
   color: #666;
 }
 
+/* Input del formulario de login */
 input {
   width: 100%;
   padding: 0.75rem;
@@ -34,6 +39,7 @@ input:focus {
   border-color: #CFF281;
 }
 
+/* Botón del formulario de login */
 button {
   width: 100%;
   padding: 0.75rem;
@@ -46,10 +52,12 @@ button {
   margin-top: 1rem;
 }
 
+/* Botón del formulario de login al pasar el cursor */
 button:hover {
   background-color: #bfe371;
 }
 
+/* Enlace de registro del formulario de login */
 .registro-link {
   text-align: center;
   margin-top: 1.5rem;
@@ -57,16 +65,19 @@ button:hover {
   cursor: pointer;
 }
 
+/* Enlace de registro del formulario de login al pasar el cursor */
 .registro-link:hover {
   color: #333;
 }
 
+/* Contenedor del formulario de login */
 ::ng-deep .mat-dialog-container {
   padding: 0 !important;
   overflow: hidden !important;
   border-radius: 8px !important;
 }
 
+/* Animación de enfoque del formulario de login */
 @keyframes focusIn {
   from {
     transform: scale(0.98);
@@ -78,11 +89,12 @@ button:hover {
   }
 }
 
+/* Animación de enfoque del formulario de login */
 input:focus {
   animation: focusIn 0.2s ease-out;
 }
 
-/* Responsive */
+/* Responsive del formulario de login*/
 @media (max-width: 480px) {
   .login-container {
     padding: 1.5rem;

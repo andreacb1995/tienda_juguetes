@@ -1,71 +1,8 @@
 <div class="admin-productos">
-  <!-- Botón para mostrar/ocultar el formulario -->
-  <button mat-stroked-button color="primary" (click)="toggleFormulario()" class="btn-anadir">
-    {{ mostrarFormulario ? 'Ocultar Formulario' : 'Añadir Nuevo Juguete' }}
+  <!-- Botón para abrir el diálogo -->
+  <button mat-stroked-button color="primary" (click)="abrirAgregarJuguete()" class="btn-anadir">
+    Añadir Nuevo Juguete
   </button>
-
-  <!-- Formulario para añadir nuevo juguete -->
-  <div class="nuevo-juguete-form" *ngIf="mostrarFormulario">
-    <h2>Agregar Nuevo Juguete</h2>
-    <form (ngSubmit)="agregarJuguete()">
-      <!-- Seleccionar categoría -->
-      <mat-form-field>
-        <mat-label>Categoría</mat-label>
-        <mat-select [(ngModel)]="nuevoJuguete.categoria" name="categoria" required>
-          <mat-option *ngFor="let cat of categorias" [value]="cat.id">
-            {{ cat.nombre }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <!-- Campos del juguete -->
-      <mat-form-field>
-        <mat-label>Nombre</mat-label>
-        <input matInput [(ngModel)]="nuevoJuguete.datos.nombre" name="nombre" required>
-      </mat-form-field>
-
-      <mat-form-field>
-        <mat-label>Precio</mat-label>
-        <input matInput type="number" [(ngModel)]="nuevoJuguete.datos.precio" name="precio" required>
-      </mat-form-field>
-
-      <mat-form-field>
-        <mat-label>Imagen (URL)</mat-label>
-        <input matInput [(ngModel)]="nuevoJuguete.datos.imagen" name="imagen" required>
-      </mat-form-field>
-
-      <mat-form-field>
-        <mat-label>Descripción</mat-label>
-        <textarea matInput [(ngModel)]="nuevoJuguete.datos.descripcion" name="descripcion" required></textarea>
-      </mat-form-field>
-
-      <mat-form-field>
-        <mat-label>Edad Recomendada</mat-label>
-        <input matInput [(ngModel)]="nuevoJuguete.datos.edad_recomendada" name="edad_recomendada" required>
-      </mat-form-field>
-
-      <mat-form-field>
-        <mat-label>Dimensiones</mat-label>
-        <input matInput [(ngModel)]="nuevoJuguete.datos.dimensiones" name="dimensiones" required>
-      </mat-form-field>
-
-      <mat-form-field>
-        <mat-label>Marca</mat-label>
-        <input matInput [(ngModel)]="nuevoJuguete.datos.marca" name="marca" required>
-      </mat-form-field>
-
-      <mat-form-field>
-        <mat-label>Stock</mat-label>
-        <input matInput type="number" [(ngModel)]="nuevoJuguete.datos.stock" name="stock" required>
-      </mat-form-field>
-
-      <!-- Botón para enviar el formulario -->
-
-      <button mat-raised-button color="primary" type="submit" class="btn-anadir">
-        Agregar Juguete
-      </button>
-    </form>
-  </div>
 
   <!-- Filtros y lista de productos -->
   <div class="filtros">

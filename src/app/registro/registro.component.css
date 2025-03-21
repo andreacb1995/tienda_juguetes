@@ -1,3 +1,4 @@
+/* Estilos para el contenedor de registro */
 .registro-container {
   max-width: 500px;
   margin: 2rem auto;
@@ -7,6 +8,7 @@
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Estilos para el título de registro */
 .registro-titulo {
   text-align: center;
   color: #333;
@@ -15,10 +17,12 @@
   margin-bottom: 1.5rem;
 }
 
+/* Estilos para la sección del formulario */
 .form-section {
   margin-bottom: 1.5rem;
 }
 
+/* Estilos para el título de la sección */
 .form-section h3 {
   font-size: 1.2rem; 
   color: #333;
@@ -27,10 +31,12 @@
   padding-bottom: 0.4rem;
 }
 
+/* Estilos para el grupo de formulario */
 .form-group {
   margin-bottom: 1rem; 
 }
 
+/* Estilos para la etiqueta del formulario */
 .form-group label {
   display: block;
   margin-bottom: 0.3rem;
@@ -39,6 +45,7 @@
   font-size: 0.9rem; 
 }
 
+/* Estilos para el input del formulario */
 .form-group input {
   width: 100%;
   padding: 0.6rem;
@@ -48,21 +55,25 @@
   transition: all 0.3s ease;
 }
 
+/* Estilos para el input del formulario cuando está enfocado */
 .form-group input:focus {
   border-color: #CFF281;
   outline: none;
   box-shadow: 0 0 0 2px rgba(207, 242, 129, 0.2);
 }
 
+/* Estilos para la fila del formulario */
 .form-row {
   display: flex;
   gap: 0.8rem; 
 }
 
+/* Estilos para el grupo de formulario en la fila */
 .form-row .form-group {
   flex: 1;
 }
 
+/* Estilos para el botón de registro */
 .registro-btn {
   width: 100%;
   padding: 0.8rem; 
@@ -76,37 +87,44 @@
   transition: all 0.3s ease;
 }
 
+/* Estilos para el botón de registro cuando se pasa el cursor */
 .registro-btn:hover {
   background: #bfe371;
   transform: translateY(-1.5px); 
 }
 
+/* Estilos para el botón de registro cuando está deshabilitado */
 .registro-btn:disabled {
   background: #cccccc;
   cursor: not-allowed;
   transform: none;
 }
 
+/* Estilos para el enlace de login */
 .login-link {
   text-align: center;
   margin-top: 1rem; 
   font-size: 0.9rem;
 }
 
+/* Estilos para el enlace de login */
 .login-link a {
   color: #4CAF50;
   text-decoration: none;
   font-weight: 500;
 }
 
+/* Estilos para el enlace de login cuando se pasa el cursor */
 .login-link a:hover {
   text-decoration: underline;
 }
 
+/* Estilos para el contenedor de volver */
 .volver-container {
   margin-bottom: 1rem;
 }
 
+/* Estilos para el botón de volver */
 .btn-volver {
   padding: 0.6rem 1rem;
   background-color: transparent;
@@ -118,6 +136,7 @@
   transition: all 0.2s ease;
 }
 
+/* Estilos para el botón de volver cuando se pasa el cursor */  
 .btn-volver:hover {
   background-color: #f5f5f5;
   transform: translateX(-2px);

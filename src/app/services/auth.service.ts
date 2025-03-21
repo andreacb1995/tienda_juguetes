@@ -14,6 +14,8 @@ export interface Usuario {
 @Injectable({
   providedIn: 'root'
 })
+
+/* Servicio de autenticación */
 export class AuthService {
   private apiUrl = environment.apiUrl;
   private usuarioSubject = new BehaviorSubject<Usuario | null>(null);
@@ -28,6 +30,7 @@ export class AuthService {
     this.verificarSesion();
   }
 
+  /* Método para registrar un usuario */
   registro(usuario: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/auth/registro`, usuario)
       .pipe(
@@ -39,6 +42,7 @@ export class AuthService {
       );
   }
 
+  /* Método para iniciar sesión */    
   login(credentials: { username: string; password: string }): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/auth/login`, credentials, { withCredentials: true })
       .pipe(
@@ -58,6 +62,7 @@ export class AuthService {
       );
   }
 
+  /* Método para cerrar sesión */
   logout() {
     return this.http.post(`${this.apiUrl}/auth/logout`, {}, { withCredentials: true })
       .pipe(
@@ -69,6 +74,7 @@ export class AuthService {
       );
   }
 
+  /* Método para verificar la sesión */
   verificarSesion() {
     this.http.get<any>(`${this.apiUrl}/auth/verificar`, { withCredentials: true })
       .subscribe({
@@ -85,11 +91,13 @@ export class AuthService {
       });
   }
 
+  /* Método para verificar si el usuario es administrador */
   esAdmin(): boolean {
     const usuario = this.usuarioSubject.value;
     return usuario?.rol === 'admin';
   }
 
+  /* Método para obtener el usuario actual */ 
   obtenerUsuarioActual(): Observable<Usuario | null> {
     return this.usuario$;
   }

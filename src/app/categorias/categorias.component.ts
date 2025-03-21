@@ -59,6 +59,7 @@ export class CategoriasComponent implements OnInit, OnDestroy {
     });
   }
 
+  /* Método para inicializar el componente */
   ngOnInit() {
     this.cargarNovedades();
     
@@ -72,10 +73,12 @@ export class CategoriasComponent implements OnInit, OnDestroy {
     );
   }
 
+  /* Método para destruir el componente */
   ngOnDestroy() {
     this.subscriptions.unsubscribe();
   }
 
+  /* Método para cambiar el contenido de la categoría */
   cambiarContenido(categoria: string): void {
     this.categoriaSeleccionada = categoria;
     this.categoriaActual = categoria;
@@ -100,28 +103,34 @@ export class CategoriasComponent implements OnInit, OnDestroy {
       });
   }
 
+  /* Método para obtener el título de la categoría */
   getCategoriaTitle(categoria: string): string {
     const categoriaEncontrada = this.categorias.find(c => c.id === categoria);
     return categoriaEncontrada ? categoriaEncontrada.nombre : 'Novedades';
   }
 
+  /* Método para mostrar el carrito */
   toggleCarrito() {
     this.carritoVisible = !this.carritoVisible;
   }
 
+  /* Método para obtener la cantidad de items en el carrito */
   getCantidadEnCarrito(juguete: Juguete): number {
     const itemCarrito = this.itemsCarrito.find(item => item._id === juguete._id);
     return itemCarrito ? itemCarrito.cantidad : 0;
   }
 
+  /* Método para obtener el stock disponible */
   getStockDisponible(juguete: Juguete): number {
     return this.carritoService.obtenerStockDisponible(juguete);
   }
 
+  /* Método para comprobar si el juguete está disponible */
   estaDisponible(juguete: any): boolean {
     return juguete.stock > 0;
   }
 
+  /* Método para agregar un juguete al carrito */
   async agregarAlCarrito(juguete: Juguete) {
     try {
       await this.carritoService.agregarItem(juguete, 1);
@@ -138,25 +147,30 @@ export class CategoriasComponent implements OnInit, OnDestroy {
     }
   }
 
+  /* Método para actualizar el carrito */
   actualizarCarrito() {
     this.totalCarrito = this.itemsCarrito.reduce((total, item) => 
       total + (item.precio * item.cantidad), 0);
   }
 
+  /* Método para seleccionar una categoría */
   seleccionarCategoria(categoriaId: string): void {
     this.navegacionService.cambiarCategoria(categoriaId);
   }
-  
+
+  /* Método para ir al carrito */
   irACarrito() {
     this.navegacionService.irACarrito();
   }
 
+  /* Método para cargar la categoría */
   cargarCategoria(categoria: string) {
     this.categoriaSeleccionada = categoria;
     this.categoriaActual = categoria;
     this.actualizarStockCategoria();
   }
 
+  /* Método para actualizar el stock de la categoría */
   private actualizarStockCategoria() {
     this.http.get<any[]>(`${this.apiUrl}/${this.categoriaSeleccionada}`).subscribe({
       next: (data) => {
@@ -173,16 +187,17 @@ export class CategoriasComponent implements OnInit, OnDestroy {
     });
   }
 
+  /* Método para cargar las novedades */
   cargarNovedades() {
     this.cargarCategoria('novedades');
   }
 
+  /* Método para agregar un juguete al carrito de la categoría */ 
   agregarAlCarritoCategoria(juguete: any) {
     if (juguete.stock <= 0) {
       alert('No hay stock disponible para este producto');
       return;
     }
-    
     this.carritoService.agregarItem(juguete);
   }
 }

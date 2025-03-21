@@ -1,28 +1,44 @@
+<!-- Contenedor de las categorías -->
 <div class="categorias-container">
+  <!-- Tarjeta de cada categoría -->
   <div class="categoria-card" *ngFor="let categoria of categorias" (click)="seleccionarCategoria(categoria.id)">
+    <!-- Imagen de la categoría -->
     <img [src]="'/assets/imagenes/' + categoria.imagen" [alt]="categoria.nombre" class="categoria-imagen">
+    <!-- Información de la categoría -->
     <div class="categoria-info">
+      <!-- Título de la categoría -->
       <h3 class="categoria-titulo">{{categoria.nombre}}</h3>
     </div>
   </div>
+  <!-- Carrito lateral -->
   <app-carrito-lateral></app-carrito-lateral>
 </div>
 
+<!-- Contenedor de los juguetes destacados -->
 <div class="destacados">
+  <!-- Título de la categoría actual -->
   <h2>{{getCategoriaTitle(categoriaActual)}}</h2>
 
+  <!-- Mensaje de error -->
   <div class="error-message" *ngIf="error">
     {{error}}
   </div>
 
+  <!-- Grilla de juguetes -->
   <div class="juguetes-grid" *ngIf="juguetesFiltrados.length">
+    <!-- Tarjeta de cada juguete -->
     <div class="juguete-card" *ngFor="let juguete of juguetesFiltrados">
+      <!-- Imagen del juguete -->
       <img [src]="'assets/imagenes/' + juguete.imagen" [alt]="juguete.nombre">
+      <!-- Título del juguete -->
       <h3>{{juguete.nombre}}</h3>
+      <!-- Precio del juguete -->
       <p class="precio">{{juguete.precio}} €</p>
+      <!-- Stock del juguete -->
       <p class="stock" [class.sin-stock]="!estaDisponible(juguete)">
         {{ estaDisponible(juguete) ? 'Stock disponible: ' + getStockDisponible(juguete) : 'Sin stock' }}
       </p>
+      <!-- Botón de comprar -->
       <button class="btn-comprar" 
               (click)="agregarAlCarrito(juguete)"
               [disabled]="!estaDisponible(juguete)">

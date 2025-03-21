@@ -1,62 +1,80 @@
+<!-- Contenedor del perfil -->
 <div class="perfil-container">
+  <!-- Header del perfil -->
   <div class="header-perfil">
+    <!-- Botón de volver a la tienda -->
     <button class="btn-volver" (click)="volverAInicio()">
       ← Volver a la tienda
     </button>
+    <!-- Botón de cerrar sesión -->
     <button class="btn-cerrar-sesion" (click)="cerrarSesion()">
       Cerrar Sesión
     </button>
   </div>
-
+  <!-- Contenedor del perfil -->
   <div class="perfil-container">
+    <!-- Grupo de pestañas -->
     <mat-tab-group>
+      <!-- Pestaña de datos personales -->
       <mat-tab label="Datos Personales">
         <div class="datos-personales" *ngIf="usuario">
           <h2 class="seccion-titulo">Mis Datos Personales</h2>
-          
+          <!-- Tarjeta de datos -->
           <div class="datos-card">
+            <!-- Sección de información de cuenta -->
             <div class="datos-seccion">
               <h3>Información de Cuenta</h3>
+              <!-- Campo de dato -->
               <div class="campo-dato">
                 <span class="etiqueta">Usuario:</span>
                 <span class="valor">{{usuario.username}}</span>
               </div>
             </div>
 
+            <!-- Sección de información personal -->
             <div class="datos-seccion">
               <h3>Información Personal</h3>
+              <!-- Campo de dato -->
               <div class="campo-dato">
                 <span class="etiqueta">Nombre completo:</span>
                 <span class="valor">{{usuario.nombre}} {{usuario.apellidos}}</span>
               </div>
+              <!-- Campo de dato -->
               <div class="campo-dato">
                 <span class="etiqueta">Email:</span>
                 <span class="valor">{{usuario.email}}</span>
               </div>
+              <!-- Campo de dato -->
               <div class="campo-dato">
                 <span class="etiqueta">Teléfono:</span>
                 <span class="valor">{{usuario.telefono}}</span>
               </div>
             </div>
 
+            <!-- Sección de dirección de envío -->
             <div class="datos-seccion">
               <h3>Dirección de Envío</h3>
+              <!-- Campo de dato -->
               <div class="campo-dato">
                 <span class="etiqueta">Calle y número:</span>
                 <span class="valor">{{usuario.direccion?.calle}} {{usuario.direccion?.numero}}</span>
               </div>
+              <!-- Campo de dato -->
               <div class="campo-dato">
                 <span class="etiqueta">Piso:</span>
                 <span class="valor">{{usuario.direccion?.piso || 'No especificado'}}</span>
               </div>
+              <!-- Campo de dato -->
               <div class="campo-dato">
                 <span class="etiqueta">Código Postal:</span>
                 <span class="valor">{{usuario.direccion?.codigoPostal}}</span>
               </div>
+              <!-- Campo de dato -->
               <div class="campo-dato">
                 <span class="etiqueta">Ciudad:</span>
                 <span class="valor">{{usuario.direccion?.ciudad}}</span>
               </div>
+              <!-- Campo de dato -->
               <div class="campo-dato">
                 <span class="etiqueta">Provincia:</span>
                 <span class="valor">{{usuario.direccion?.provincia}}</span>
@@ -65,33 +83,51 @@
           </div>
         </div>
 
-        <!-- Mensaje cuando no hay usuario -->
+        <!-- Mensaje cuando no hay usuario -->  
         <div class="no-datos" *ngIf="!usuario">
           <p>No se pudieron cargar los datos del usuario</p>
         </div>
       </mat-tab>
-      
+      <!-- Pestaña de mis pedidos --> 
       <mat-tab label="Mis Pedidos">
         <div class="pedidos-lista">
+          <!-- Título de historial de pedidos -->
           <h2>Historial de Pedidos</h2>
+          <!-- Grid de pedidos -->
           <div class="pedidos-grid" *ngIf="pedidos.length > 0">
+            <!-- Tarjeta de pedido -->
             <div class="pedido-card" *ngFor="let pedido of pedidos">
+              <!-- Header de pedido -->
               <div class="pedido-header">
+                <!-- Fecha de pedido -->
                 <span class="pedido-fecha">{{pedido.fechaPedido | date:'dd/MM/yyyy'}}</span>
-                <span class="pedido-estado" [class]="pedido.estado">{{pedido.estado}}</span>
+                <!-- Estado de pedido -->
+                <span class="pedido-estado" [ngClass]="{'estado-pendiente': pedido.estado === 'pendiente', 'estado-aceptado': pedido.estado === 'aceptado', 'estado-rechazado': pedido.estado === 'rechazado', 'estado-enviado': pedido.estado === 'enviado'}">
+                  {{pedido.estado}}
+                </span>
               </div>
+              <!-- Sección de productos del pedido -->
               <div class="pedido-productos">
+                <!-- Título de productos -->
+                <h4>Productos:</h4>
+                <!-- Item de producto -->
                 <div class="producto-item" *ngFor="let producto of pedido.productos">
+                  <!-- Nombre de producto -->
                   <span class="producto-nombre">{{producto.nombre}}</span>
+                  <!-- Cantidad de producto -->
                   <span class="producto-cantidad">x{{producto.cantidad}}</span>
+                  <!-- Precio de producto -->
                   <span class="producto-precio">{{producto.precio | currency:'EUR'}}</span>
                 </div>
               </div>
+              <!-- Footer de pedido -->
               <div class="pedido-footer">
+                <!-- Total de pedido -->
                 <span class="pedido-total">Total: {{pedido.total | currency:'EUR'}}</span>
               </div>
             </div>
           </div>
+          <!-- Mensaje cuando no hay pedidos -->
           <div class="no-pedidos" *ngIf="pedidos.length === 0">
             No tienes pedidos realizados
           </div>

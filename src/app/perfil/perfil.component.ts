@@ -40,6 +40,7 @@ export class PerfilComponent implements OnInit {
     });
   }
 
+  /* Método para cargar los pedidos del usuario */
   async cargarPedidos() {
     if (!this.usuario) return;
     
@@ -51,14 +52,17 @@ export class PerfilComponent implements OnInit {
     }
   }
 
+  /* Método para volver a la página principal */
   volverAInicio() {
     this.navegacionService.irAPrincipal();
   }
 
+  /* Método para formatear la fecha */
   formatearFecha(fecha: string) {
     return new Date(fecha).toLocaleDateString();
   }
 
+  /* Método para cerrar sesión */   
   cerrarSesion() {
     this.authService.logout().subscribe({
       next: () => {

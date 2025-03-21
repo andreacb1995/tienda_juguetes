@@ -1,3 +1,4 @@
+/* Importaciones de Angular */
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -39,6 +40,7 @@ export class CarritoComponent implements OnInit, OnDestroy {
     this.crearFormulario();
   }
 
+  /* Método para inicializar el componente */
   ngOnInit() {
     this.subscription.add(
       this.carritoService.obtenerItems().subscribe(items => {
@@ -57,10 +59,12 @@ export class CarritoComponent implements OnInit, OnDestroy {
     );
   }
 
+  /* Método para destruir el componente */
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
-  
+
+  /* Método para decrementar la cantidad del producto en el carrito */
   async decrementarCantidad(item: any) {
     if (item.cantidad > 1) {
       try {
@@ -71,7 +75,8 @@ export class CarritoComponent implements OnInit, OnDestroy {
       }
     }
   }
-  
+
+  /* Método para incrementar la cantidad del producto en el carrito */
   async incrementarCantidad(item: any) {
     const cantidadEnCarrito = item.cantidad || 0;  
     const stockDisponible = item.stock;
@@ -88,7 +93,8 @@ export class CarritoComponent implements OnInit, OnDestroy {
       console.error('Error al incrementar cantidad:', error);
     }
   }
-  
+
+  /* Método para eliminar el producto del carrito */
   async eliminarProducto(item: any) {
     try {
       await this.carritoService.eliminarItem(item, item.cantidad);
@@ -97,19 +103,22 @@ export class CarritoComponent implements OnInit, OnDestroy {
     }
   }
 
+  /* Método para actualizar el total del carrito */
   actualizarTotal() {
     this.total = this.carritoService.obtenerTotal();
   }
 
-
+  /* Método para volver a la tienda */
   volverATienda() {
     this.navegacionService.irAPrincipal();
   }
-  
+
+  /* Método para ir a la página de login */
   iraLogin(){
     this.navegacionService.abrirLogin();
   }
 
+  /* Método para crear el formulario de datos de envío */
   crearFormulario() {
     this.datosEnvioForm = this.fb.group({
       nombre: ['', Validators.required],
@@ -125,6 +134,7 @@ export class CarritoComponent implements OnInit, OnDestroy {
     });
   }
 
+  /* Método para cargar los datos del usuario */
   cargarDatosUsuario(usuario: any) {
     console.log('Cargando datos de usuario:', usuario);
     if (usuario) {
@@ -143,10 +153,12 @@ export class CarritoComponent implements OnInit, OnDestroy {
     }
   }
 
+  /* Método para iniciar el pedido */
   iniciarPedido() {
     this.mostrarFormulario = true;
   }
 
+  /* Método para confirmar el pedido */ 
   confirmarPedido() {
     if (this.datosEnvioForm.valid && !this.procesandoPedido) {
       this.procesandoPedido = true; // Evita múltiples envíos

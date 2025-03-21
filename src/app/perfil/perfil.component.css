@@ -1,3 +1,4 @@
+/* Contenedor del perfil */ 
 .perfil-container {
     max-width: 1000px;
     margin: 40px auto;
@@ -6,12 +7,13 @@
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
-  
+
+/* Contenedor de volver */
 .volver-container {
     margin-bottom: 2rem;
 }
 
-
+/* Grid de datos */
 .datos-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -19,12 +21,14 @@
   margin: 2rem 0;
 }
 
+/* Item de dato */
 .dato-item {
   padding: 1rem;
   background-color: #f8f9fa;
   border-radius: 8px;
 }
 
+/* Etiqueta de dato */
 .etiqueta {
   color: #666;
   font-size: 0.9rem;
@@ -32,56 +36,38 @@
   margin-bottom: 0.5rem;
 }
 
+/* Valor de dato */
 .valor {
   color: #333;
   font-size: 1.1rem;
   font-weight: 500;
 }
 
-.pedidos-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 1.5rem;
-  margin-top: 2rem;
+/* Lista de pedidos */
+.pedidos-lista {
+  margin-top: 20px;
 }
 
+/* Grid de pedidos */
+.pedidos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Tarjeta de pedido */
 .pedido-card {
-  background: #f8fafc;
+  background: #ffffff;
   border-radius: 10px;
   padding: 20px;
   margin-bottom: 20px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border: 1px solid #e2e8f0;
   position: relative;
   overflow: hidden;
 }
 
-.pedido-card::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-}
-
-/* Estados con barra lateral y badges */
-.pedido-pendiente::before {
-  background-color: #ecc94b;
-}
-
-.pedido-aceptado::before {
-  background-color: #4299e1;
-}
-
-.pedido-rechazado::before {
-  background-color: #f56565;
-}
-
-.pedido-enviado::before {
-  background-color: #48bb78;
-}
-
+/* Header de pedido */
 .pedido-header {
   display: flex;
   justify-content: space-between;
@@ -91,18 +77,14 @@
   border-bottom: 1px solid #e2e8f0;
 }
 
-.pedido-id {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #2d3748;
-}
-
+/* Fecha de pedido */
 .pedido-fecha {
+  font-size: 1rem;
   color: #64748b;
-  font-size: 0.9rem;
 }
 
-.estado-pedido {
+/* Estado de pedido */
+.pedido-estado {
   display: inline-block;
   padding: 6px 12px;
   border-radius: 20px;
@@ -111,42 +93,40 @@
   text-transform: capitalize;
 }
 
+/* Estado pendiente */
 .estado-pendiente {
   background-color: #fefcbf;
   color: #744210;
   border: 1px solid #ecc94b;
 }
 
+/* Estado aceptado */
 .estado-aceptado {
   background-color: #ebf8ff;
   color: #2c5282;
   border: 1px solid #4299e1;
 }
 
+/* Estado rechazado */
 .estado-rechazado {
   background-color: #fff5f5;
   color: #c53030;
   border: 1px solid #f56565;
 }
 
+/* Estado enviado */
 .estado-enviado {
   background-color: #f0fff4;
   color: #276749;
   border: 1px solid #48bb78;
 }
 
-.pedido-detalles {
-  margin-top: 15px;
+/* Pedido productos */
+.pedido-productos {
+  margin-top: 10px;
 }
 
-.producto-lista {
-  margin: 10px 0;
-  padding: 10px;
-  background: white;
-  border-radius: 8px;
-  border: 1px solid #e2e8f0;
-}
-
+/* Item de producto */
 .producto-item {
   display: flex;
   justify-content: space-between;
@@ -155,49 +135,50 @@
   border-bottom: 1px solid #f1f5f9;
 }
 
+/* Item de producto último */
 .producto-item:last-child {
   border-bottom: none;
 }
 
+/* Nombre de producto */
 .producto-nombre {
   flex: 1;
   font-size: 1rem;
   color: #334155;
 }
 
+/* Cantidad de producto */
 .producto-cantidad {
   margin: 0 20px;
   color: #64748b;
   font-size: 0.9rem;
 }
 
+/* Precio de producto */
 .producto-precio {
   font-weight: 600;
   color: #2d3748;
   font-size: 1rem;
 }
 
-.pedido-total {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
+/* Footer de pedido */
+.pedido-footer {
   margin-top: 15px;
   padding-top: 15px;
   border-top: 1px solid #bee3f8;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 
-.total-label {
-  margin-right: 10px;
-  font-size: 1.1rem;
-  color: #4a5568;
-}
-
-.total-valor {
-  font-size: 1.2rem;
+/* Total de pedido */
+.pedido-total {
   font-weight: 600;
   color: #2c5282;
+  font-size: 1.1rem;
 }
 
+/* Sin pedidos */
 .sin-pedidos {
   text-align: center;
   padding: 30px;
@@ -208,6 +189,7 @@
   margin-top: 20px;
 }
 
+/* No pedidos */
 .no-pedidos {
   text-align: center;
   padding: 2rem;
@@ -215,10 +197,12 @@
   font-style: italic;
 }
 
+/* Datos personales */
 .datos-personales {
   padding: 2rem;
 }
 
+/* Sección de título */
 .seccion-titulo {
   color: #3182ce;
   font-size: 1.8rem;
@@ -226,6 +210,7 @@
   text-align: center;
 }
 
+/* Tarjeta de datos */
 .datos-card {
   background-color: #fff;
   border-radius: 10px;
@@ -234,18 +219,21 @@
   margin-bottom: 2rem;
 }
 
+/* Sección de datos */
 .datos-seccion {
   margin-bottom: 2rem;
   padding-bottom: 1.5rem;
   border-bottom: 1px solid #eee;
 }
 
+/* Sección de datos última */
 .datos-seccion:last-child {
   border-bottom: none;
   margin-bottom: 0;
   padding-bottom: 0;
 }
 
+/* Título de sección */
 .datos-seccion h3 {
   color: #2c3e50;
   font-size: 1.3rem;
@@ -255,6 +243,7 @@
   display: inline-block;
 }
 
+/* Campo de dato */
 .campo-dato {
   margin-bottom: 15px;
   padding: 10px;
@@ -263,6 +252,7 @@
   box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
+/* Etiqueta de campo */
 .campo-dato label {
   display: block;
   font-size: 0.9rem;
@@ -270,17 +260,20 @@
   margin-bottom: 5px;
 }
 
+/* Valor de campo */
 .campo-dato span {
   font-size: 1rem;
   color: #2d3748;
 }
 
+/* Sección de acciones */
 .acciones {
   display: flex;
   justify-content: center;
   margin-top: 2rem;
 }
 
+/* No datos */    
 .no-datos {
   text-align: center;
   padding: 3rem;

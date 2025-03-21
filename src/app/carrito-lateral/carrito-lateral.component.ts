@@ -21,6 +21,7 @@ export class CarritoLateralComponent implements OnInit {
     private navegacionService: NavegacionService
   ) {}
 
+  /* Método para inicializar el carrito */
   ngOnInit() {
     this.carritoService.carrito$.subscribe(items => {
       this.items = items;
@@ -31,7 +32,8 @@ export class CarritoLateralComponent implements OnInit {
       this.mostrarCarrito = mostrar;
     });
   }
-  
+
+  /* Método para decrementar la cantidad del producto en el carrito */
   async decrementarCantidad(item: any) {
     if (item.cantidad > 1) {
       try {
@@ -42,7 +44,8 @@ export class CarritoLateralComponent implements OnInit {
       }
     }
   }
-  
+
+  /* Método para incrementar la cantidad del producto en el carrito */
   async incrementarCantidad(item: any) {
     const cantidadEnCarrito = item.cantidad || 0;  
     const stockDisponible = item.stock;
@@ -59,7 +62,8 @@ export class CarritoLateralComponent implements OnInit {
       console.error('Error al incrementar cantidad:', error);
     }
   }
-  
+
+  /* Método para eliminar el producto del carrito */
   async eliminarProducto(item: any) {
     try {
       await this.carritoService.eliminarItem(item, item.cantidad);
@@ -68,18 +72,22 @@ export class CarritoLateralComponent implements OnInit {
     }
   }
 
+  /* Método para calcular el total del carrito */
   calcularTotal() {
     this.total = this.items.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
   }
 
+  /* Método para actualizar el carrito */
   actualizarCarrito() {
     this.calcularTotal();
   }
 
+  /* Método para realizar el pedido */
   realizarPedido() {
     this.navegacionService.irACarrito();
   }
 
+  /* Método para abrir el carrito lateral */
   toggleCarrito() {
     this.carritoService.toggleCarritoLateral();
   }

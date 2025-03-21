@@ -53,6 +53,7 @@ export class RegistroComponent {
     private navegacionService: NavegacionService
   ) {}
 
+  /* Método para registrar un usuario */
   onSubmit() {
     this.authService.registro(this.usuario).subscribe({
       next: (response) => {
@@ -65,6 +66,7 @@ export class RegistroComponent {
     });
   }
 
+  /* Método para volver a la página principal */
   volverAInicio() {
     this.navegacionService.irAPrincipal();
   }

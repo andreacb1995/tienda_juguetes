@@ -4,6 +4,7 @@ import { PrincipalComponent } from './principal/principal.component';
 import { RegistroComponent } from './registro/registro.component';
 import { PerfilComponent } from './perfil/perfil.component';
 import { AdminGuard } from './guards/admin.guard';
+import { CrearProductoDialogComponent } from './crear-producto-dialog/crear-producto-dialog.component';
 
 export const routes: Routes = [
   {
@@ -27,6 +28,10 @@ export const routes: Routes = [
     loadComponent: () => import('./admin/admin.component').then(m => m.AdminComponent),
     canActivate: [AdminGuard]
   },
+  { 
+    path: 'crear-juguete', 
+    component: CrearProductoDialogComponent },
+
   {
     path: '**',
     redirectTo: ''

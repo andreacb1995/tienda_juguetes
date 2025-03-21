@@ -1,3 +1,4 @@
+/* Estilos para la cabecera de la página */
 header {
   display: flex;
   justify-content: space-between;
@@ -7,21 +8,25 @@ header {
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+/* Estilos para el logo de la página */
 .logo {
   cursor: pointer;
   align-items: center;
 }
 
+/* Estilos para el logo de la página */
 .logo img {
   height: 50px;
 }
 
+/* Estilos para los botones de navegación */
 .nav-buttons {
   display: flex;
   gap: 1.5rem;
   align-items: center;
 }
 
+/* Estilos para los botones de navegación */
 .icon-button {
   position: relative;
   background: none;
@@ -35,12 +40,14 @@ header {
   transition: all 0.3s ease;
 }
 
+/* Estilos para los iconos de los botones de navegación */
 .icon-button mat-icon {
   font-size: 28px;
   width: 28px;
   height: 28px;
 }
 
+/* Estilos para los botones de navegación que no tienen iconos */
 .icon-button:not(:has(mat-icon)) {
   padding: 0.5rem 1rem;
   border-radius: 4px;
@@ -49,22 +56,26 @@ header {
   font-weight: 500;
 }
 
+/* Estilos para los botones de navegación que no tienen iconos */
 .icon-button:hover {
   color: #333;
   background-color: #CFF281;
   border-radius: 50%;
 }
 
+/* Estilos para los botones de navegación que no tienen iconos */
 .icon-button:not(:has(mat-icon)):hover {
   border-radius: 4px;
   background-color: #bfe371;
 }
 
+/* Estilos para el contenedor del carrito */
 .carrito-container {
   position: relative;
   display: inline-block;
 }
 
+/* Estilos para el contador del carrito */
 .carrito-contador {
   position: absolute;
   top: -8px;
@@ -83,11 +94,13 @@ header {
   z-index: 1;
 }
 
+/* Estilos para los iconos de los botones de navegación */
 mat-icon {
   vertical-align: middle;
   line-height: 1;
 }
 
+/* Estilos para la cabecera de la página */
 .cabecera {
   display: flex;
   align-items: center;
@@ -99,17 +112,21 @@ mat-icon {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);   
 }
 
+/* Estilos para el logo de la página */
 .logo img {
   width: 280px;
   height: 100%;
 }
 
+/* Estilos para los iconos de los botones de navegación */
 .iconos {
   position: absolute;
   right: 20px;
   display: flex;
   gap: 10px; 
 }
+
+/* Estilos para los iconos de los botones de navegación */
 .iconos mat-icon {
 background-color: white;
 color: black;
@@ -117,6 +134,8 @@ border-radius: 50%;
 padding: 5px;
 transition: color 0.3s;
 }
+
+/* Estilos para los iconos de los botones de navegación */
 .iconos mat-icon:hover {
   color: #CFF281;
 } 

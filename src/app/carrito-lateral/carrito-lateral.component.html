@@ -1,35 +1,49 @@
+
+<!-- Carrito lateral -->
 <div class="carrito-sidebar" [class.active]="mostrarCarrito">
+  <!-- Encabezado del carrito -->
   <div class="carrito-header">
     <h2>Mi Carrito</h2>
     <button class="btn-cerrar" (click)="toggleCarrito()">×</button>
   </div>
   
+  <!-- Items del carrito -->
   <div class="carrito-items" *ngIf="items.length > 0">
+    <!-- Item del carrito -->
     <div class="carrito-item" *ngFor="let item of items">
+      <!-- Imagen del item -->
       <img [src]="'assets/imagenes/' + item.imagen" [alt]="item.nombre">
+      <!-- Detalles del item -->
       <div class="item-detalles">
         <h4>{{item.nombre}}</h4>
         <p>{{item.precio}} €</p>
       </div>
+      <!-- Cantidad del item -->
       <div class="item-cantidad">
         <button (click)="decrementarCantidad(item)">-</button>
         <input type="number" [(ngModel)]="item.cantidad" min="1" (change)="actualizarCarrito()">
         <button (click)="incrementarCantidad(item)">+</button>
       </div>
+      <!-- Total del item -->
       <p class="item-total">{{item.precio * item.cantidad | currency:'EUR'}}</p>
+      <!-- Botón de eliminar -->
       <button class="btn-eliminar" (click)="eliminarProducto(item)">×</button>
     </div>
   </div>
 
+  <!-- Mensaje de carrito vacío -->
   <div class="carrito-vacio" *ngIf="items.length === 0">
     <p>Tu carrito está vacío</p>
   </div>
 
+  <!-- Footer del carrito -->
   <div class="carrito-footer">
+    <!-- Total del carrito -->
     <div class="total">
       <span>Total:</span>
       <span class="total-precio">{{total | currency:'EUR'}}</span>
     </div>
+    <!-- Botón de realizar pedido -->
     <button class="btn-realizar-pedido" (click)="realizarPedido()" [disabled]="!items.length">
       Realizar Pedido
     </button>

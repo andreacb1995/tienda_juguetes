@@ -28,6 +28,7 @@ export class LoginComponent {
     private router: Router
   ) {}
 
+  /* Método para enviar el formulario de login */
   onSubmit() {
     if (!this.username || !this.password) {
       this.error = 'Por favor, complete todos los campos';
@@ -45,6 +46,7 @@ export class LoginComponent {
       });
   }
 
+  /* Método para abrir el formulario de registro */ 
   abrirRegistro() {
     this.dialogRef.close();
     this.navegacionService.irARegistro();
