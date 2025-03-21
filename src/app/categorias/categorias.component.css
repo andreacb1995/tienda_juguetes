@@ -31,9 +31,20 @@
 .icon-button {
   background: none;
   border: none;
-  font-size: 24px;
+  font-size: 16px; 
   cursor: pointer;
   position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px; 
+  padding: 8px 12px; 
+  border-radius: 25px; 
+  transition: all 0.3s ease;
+  color: #333; 
+}
+
+.icon-button:hover {
+  background-color: #f0f0f0; 
 }
 
 .cart-count {

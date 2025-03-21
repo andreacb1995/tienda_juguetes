@@ -12,6 +12,7 @@ import { environment } from '../../environments/environment';
 export class CarritoService {
   private carritoSubject = new BehaviorSubject<any[]>([]);
   private mostrarCarritoSubject = new BehaviorSubject<boolean>(false);
+  
   private apiUrl = environment.apiUrl;
   
   carrito$ = this.carritoSubject.asObservable();
@@ -96,7 +97,7 @@ export class CarritoService {
       categoria: producto.categoria,
       cantidad: -cantidad
     };
-
+    
     this.actualizarStock([productoParaStock]).subscribe({
       next: () => {
         if (productoExistente) {

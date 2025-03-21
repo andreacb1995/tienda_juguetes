@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { PedidosService } from '../services/pedidos.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-admin-pedidos',
@@ -15,7 +16,7 @@ export class AdminPedidosComponent implements OnInit {
   cargando = false;
   error = '';
 
-  constructor(private pedidosService: PedidosService) {}
+  constructor(private pedidosService: PedidosService, private snackBar: MatSnackBar) {}
 
   ngOnInit() {
     this.cargarPedidos();
@@ -25,7 +26,12 @@ export class AdminPedidosComponent implements OnInit {
     this.cargando = true;
     this.pedidosService.obtenerTodosPedidos().subscribe({
       next: (pedidos) => {
-        this.pedidos = pedidos;
+
+        // Redondear el total de cada pedido a dos decimales
+        this.pedidos = pedidos.map(pedido => {
+          pedido.total = parseFloat(pedido.total.toFixed(2)); // Redondea a dos decimales
+          return pedido;
+        });
         this.cargando = false;
       },
       error: (error) => {
@@ -39,11 +45,28 @@ export class AdminPedidosComponent implements OnInit {
     this.pedidosService.actualizarEstadoPedido(pedidoId, estado).subscribe({
       next: () => {
         this.cargarPedidos();
-        alert(`Pedido ${estado} correctamente`);
+        this.mostrarMensajeExito(`Pedido ${estado} correctamente`); // Mensaje de éxito
       },
       error: (error) => {
-        alert('Error al actualizar el estado del pedido');
+        this.mostrarMensajeError('Error al actualizar el estado del pedido'); // Mensaje de error
       }
     });
   }
+
+  // Método para mostrar mensajes de éxito
+  mostrarMensajeExito(mensaje: string) {
+    this.snackBar.open(mensaje, 'Cerrar', {
+      duration: 3000, 
+      panelClass: ['snackbar-exito'], 
+    });
+  }
+
+  // Método para mostrar mensajes de error
+  mostrarMensajeError(mensaje: string) {
+    this.snackBar.open(mensaje, 'Cerrar', {
+      duration: 3000, 
+      panelClass: ['snackbar-error'], 
+    });
+  }
+
 } 

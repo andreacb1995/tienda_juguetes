@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { JuguetesService, Juguete } from '../services/juguetes.service';
@@ -8,6 +8,7 @@ import { CarritoLateralComponent } from '../carrito-lateral/carrito-lateral.comp
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { Subscription } from 'rxjs';
 
 interface ItemCarrito extends Juguete {
   cantidad: number;
@@ -26,37 +27,25 @@ interface Categoria {
   templateUrl: './categorias.component.html',
   styleUrls: ['./categorias.component.css']
 })
-export class CategoriasComponent implements OnInit {
-  juguetesFiltrados: Juguete[] = [];
-  categoriaActual: string = 'novedades';
+export class CategoriasComponent implements OnInit, OnDestroy {
+  categorias = [
+    { id: 'puzzles', nombre: 'Puzzles', imagen: 'puzzles.jpg' },
+    { id: 'juegos-creatividad', nombre: 'Juegos de Creatividad', imagen: 'creatividad.jpg' },
+    { id: 'juegos-mesa', nombre: 'Juegos de Mesa', imagen: 'mesa.jpg' },
+    { id: 'juegos-madera', nombre: 'Juegos de Madera', imagen: 'madera.jpg' }
+  ];
+
+  juguetes: any[] = [];
+  juguetesFiltrados: any[] = [];
+  categoriaSeleccionada: string = '';
+  categoriaActual: string = '';
   error: string = '';
   carritoVisible = false;
   itemsCarrito: ItemCarrito[] = [];
   totalCarrito = 0;
   cargando: boolean = false;
-  categorias: Categoria[] = [
-    {
-      id: 'puzzles',
-      nombre: 'Puzzles',
-      imagen: 'puzzles.jpg'
-    },
-    {
-      id: 'juegos-creatividad',
-      nombre: 'Creatividad',
-      imagen: 'creatividad.jpg'
-    },
-    {
-      id: 'juegos-mesa',
-      nombre: 'Mesa',
-      imagen: 'mesa.jpg'
-    },
-    {
-      id: 'juegos-madera',
-      nombre: 'Madera',
-      imagen: 'madera.jpg'
-    }
-  ];
   private apiUrl = environment.apiUrl;
+  private subscriptions: Subscription = new Subscription();
 
   constructor(
     private juguetesService: JuguetesService,
@@ -71,15 +60,24 @@ export class CategoriasComponent implements OnInit {
   }
 
   ngOnInit() {
-    //this.carritoService.vaciarCarrito(); 
-    this.cambiarContenido('novedades');
-    this.carritoService.carrito$.subscribe(items => {
-      this.itemsCarrito = [...items]; 
-      this.actualizarCarrito();
-    });
+    this.cargarNovedades();
+    
+    // Suscribirse a los cambios del carrito
+    this.subscriptions.add(
+      this.carritoService.carrito$.subscribe(() => {
+        if (this.categoriaSeleccionada) {
+          this.actualizarStockCategoria();
+        }
+      })
+    );
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   cambiarContenido(categoria: string): void {
+    this.categoriaSeleccionada = categoria;
     this.categoriaActual = categoria;
     this.error = '';
     this.cargando = true;
@@ -89,11 +87,13 @@ export class CategoriasComponent implements OnInit {
     this.juguetesService.getJuguetesPorCategoria(rutaCategoria)
       .subscribe({
         next: (juguetes) => {
+          this.juguetes = juguetes;
           this.juguetesFiltrados = juguetes;
           this.cargando = false;
         },
         error: (error) => {
           this.error = 'Error al cargar los juguetes. Por favor, intenta de nuevo.';
+          this.juguetes = [];
           this.juguetesFiltrados = [];
           this.cargando = false;
         }
@@ -101,14 +101,8 @@ export class CategoriasComponent implements OnInit {
   }
 
   getCategoriaTitle(categoria: string): string {
-    const titles: { [key: string]: string } = {
-      'juegos-mesa': 'Juegos de Mesa',
-      'puzzles': 'Puzzles',
-      'juegos-creatividad': 'Creatividad',
-      'juegos-madera': 'Juguetes de Madera',
-      'novedades': 'Novedades'
-    };
-    return titles[categoria] || categoria;
+    const categoriaEncontrada = this.categorias.find(c => c.id === categoria);
+    return categoriaEncontrada ? categoriaEncontrada.nombre : 'Novedades';
   }
 
   toggleCarrito() {
@@ -129,15 +123,15 @@ export class CategoriasComponent implements OnInit {
   }
 
   async agregarAlCarrito(juguete: Juguete) {
-    const stockDisponible = this.getStockDisponible(juguete);
-    
-    if (stockDisponible <= 0) {
-      alert('No hay stock disponible');
-      return;
-    }
-
     try {
       await this.carritoService.agregarItem(juguete, 1);
+
+      // Actualizar stock en juguetesFiltrados
+      this.juguetes = this.juguetes.map(j => 
+        j._id === juguete._id ? { ...j, stock: j.stock - 1 } : j
+      );
+
+      // Mostrar el carrito lateral
       this.carritoService.mostrarCarritoLateral();
     } catch (error) {
       console.error('Error al agregar al carrito:', error);
@@ -158,20 +152,23 @@ export class CategoriasComponent implements OnInit {
   }
 
   cargarCategoria(categoria: string) {
+    this.categoriaSeleccionada = categoria;
     this.categoriaActual = categoria;
-    this.error = '';
-    this.cargando = true;
-    
-    this.http.get<any[]>(`${this.apiUrl}/${categoria}`).subscribe({
+    this.actualizarStockCategoria();
+  }
+
+  private actualizarStockCategoria() {
+    this.http.get<any[]>(`${this.apiUrl}/${this.categoriaSeleccionada}`).subscribe({
       next: (data) => {
+        this.juguetes = data;
         this.juguetesFiltrados = data;
-        this.cargando = false;
+        this.error = '';
       },
       error: (error) => {
         console.error('Error al cargar juguetes:', error);
         this.error = 'Error al cargar los juguetes. Por favor, inténtelo de nuevo.';
+        this.juguetes = [];
         this.juguetesFiltrados = [];
-        this.cargando = false;
       }
     });
   }
@@ -187,6 +184,5 @@ export class CategoriasComponent implements OnInit {
     }
     
     this.carritoService.agregarItem(juguete);
-    this.cargarCategoria(this.categoriaActual);
   }
 }

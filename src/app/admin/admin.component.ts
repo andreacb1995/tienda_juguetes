@@ -4,6 +4,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { AdminProductosComponent } from '../admin-productos/admin-productos.component';
 import { AdminPedidosComponent } from '../admin-pedidos/admin-pedidos.component';
 import { NavegacionService } from '../services/navegacion.service';
+import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin',
@@ -18,14 +20,32 @@ import { NavegacionService } from '../services/navegacion.service';
   styleUrls: ['./admin.component.css']
 })
 export class AdminComponent implements OnInit {
+  isLoggedIn: boolean = false; 
+
   constructor(    
     private navegacionService: NavegacionService,
+    private authService: AuthService,
+    private router: Router
   ) {
     
   }
-  ngOnInit() {}
+  ngOnInit() {
+    this.authService.isLoggedIn$.subscribe((loggedIn) => {
+      this.isLoggedIn = loggedIn;
+    });  }
 
   volverAInicio() {
     this.navegacionService.irAPrincipal();
+  }
+
+  cerrarSesion() {
+    this.authService.logout().subscribe({
+      next: () => {
+        this.router.navigate(['/']);
+      },
+      error: (error) => {
+        console.error('Error al cerrar sesión:', error);
+      }
+    });
   }
 }

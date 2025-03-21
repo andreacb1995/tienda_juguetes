@@ -6,6 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { JuguetesService } from '../services/juguetes.service';
 import { CarritoService } from '../services/carrito.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-admin-productos',
@@ -33,10 +34,28 @@ export class AdminProductosComponent implements OnInit {
   productos: any[] = [];
   cargando = false;
   error = '';
+  mostrarFormulario = false;
+
+    // Objeto para almacenar los datos del nuevo juguete
+  nuevoJuguete: any = {
+    categoria: 'novedades', // Categoría seleccionada
+    datos: { // Datos del juguete
+        nombre: '',
+        precio: 0,
+        imagen: '',
+        categoria: 'novedades',
+        descripcion: '',
+        edad_recomendada: '',
+        dimensiones: '',
+        marca: '',
+        stock: 0
+    }
+  };
 
   constructor(
     private juguetesService: JuguetesService,
-    private carritoService: CarritoService
+    private carritoService: CarritoService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {
@@ -69,16 +88,67 @@ export class AdminProductosComponent implements OnInit {
       producto.stock
     ).subscribe({
       next: () => {
-        alert('Stock actualizado correctamente');
+        this.mostrarMensajeExito('Stock actualizado correctamente');
         this.cargarProductos(); // Recargar para obtener el stock actualizado
       },
       error: (error) => {
-        alert('Error al actualizar el stock');
+        this.mostrarMensajeError('Error al actualizar el stock');
       }
     });
   }
 
   onCategoriaChange() {
     this.cargarProductos();
+  }
+
+  // Método para agregar un nuevo juguete
+  agregarJuguete() {
+    this.cargando = true;
+    this.juguetesService.agregarJuguete(this.nuevoJuguete)
+        .subscribe({
+          next: (juguete) => {
+              this.mostrarMensajeExito('Juguete agregado exitosamente');
+              this.cargarProductos(); // Recargar la lista de productos
+              this.cargando = false;
+              this.nuevoJuguete = { // Reiniciar el formulario
+                  categoria: 'novedades',
+                  datos: {
+                      nombre: '',
+                      precio: 0,
+                      imagen: '',
+                      categoria: 'novedades',
+                      descripcion: '',
+                      edad_recomendada: '',
+                      dimensiones: '',
+                      marca: '',
+                      stock: 0
+                  }
+              };
+          },
+          error: (error) => {
+            this.error = 'Error al agregar el juguete';
+            this.cargando = false;
+        }
+    });
+  }
+
+      // Método para mostrar mensajes de éxito
+  mostrarMensajeExito(mensaje: string) {
+    this.snackBar.open(mensaje, 'Cerrar', {
+      duration: 3000, 
+      panelClass: ['snackbar-exito'], 
+    });
+  }
+
+  // Método para mostrar mensajes de error
+  mostrarMensajeError(mensaje: string) {
+    this.snackBar.open(mensaje, 'Cerrar', {
+      duration: 3000, 
+      panelClass: ['snackbar-error'], 
+    });
+  }
+
+  toggleFormulario() {
+    this.mostrarFormulario = !this.mostrarFormulario;
   }
 } 

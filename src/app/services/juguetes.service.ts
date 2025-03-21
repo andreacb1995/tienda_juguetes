@@ -55,4 +55,13 @@ export class JuguetesService {
       { withCredentials: true }
     );
   }
+
+  agregarJuguete(juguete: any): Observable<any> {
+    console.log(juguete);
+    return this.http.post(
+        `${this.apiUrl}/productos/nuevo`, // Usar POST en lugar de PUT
+        juguete, // Enviar el objeto juguete directamente
+        { withCredentials: true }
+    );
+  }
 }

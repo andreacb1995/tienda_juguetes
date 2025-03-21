@@ -2,10 +2,8 @@
   <div class="nav-buttons left">
     <!-- Botón de Login/Registro -->
     <button class="icon-button" *ngIf="!isLoggedIn" (click)="abrirLogin()">
-      Iniciar Sesión
-    </button>
-    <button class="icon-button" *ngIf="isLoggedIn" (click)="cerrarSesion()">
-      Cerrar Sesión
+      <mat-icon>login</mat-icon> <!-- Icono de inicio de sesión -->
+      <span>Iniciar Sesión</span>
     </button>
   </div>
 

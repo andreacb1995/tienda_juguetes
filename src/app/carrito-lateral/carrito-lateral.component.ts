@@ -52,7 +52,7 @@ export class CarritoLateralComponent implements OnInit {
       console.log('No puedes agregar más de lo que hay en stock.');
       return; // Si ya se alcanzó el stock, no se incrementa la cantidad
     }
-    try {
+    try { 
       // Incrementar la cantidad del producto en el carrito
       await this.carritoService.agregarItem(item, 1);
     } catch (error) {

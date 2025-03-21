@@ -1,37 +1,106 @@
 <div class="admin-productos">
-    <div class="filtros">
+  <!-- Botón para mostrar/ocultar el formulario -->
+  <button mat-stroked-button color="primary" (click)="toggleFormulario()" class="btn-anadir">
+    {{ mostrarFormulario ? 'Ocultar Formulario' : 'Añadir Nuevo Juguete' }}
+  </button>
+
+  <!-- Formulario para añadir nuevo juguete -->
+  <div class="nuevo-juguete-form" *ngIf="mostrarFormulario">
+    <h2>Agregar Nuevo Juguete</h2>
+    <form (ngSubmit)="agregarJuguete()">
+      <!-- Seleccionar categoría -->
       <mat-form-field>
         <mat-label>Categoría</mat-label>
-        <mat-select [(ngModel)]="categoriaSeleccionada" (selectionChange)="onCategoriaChange()">
+        <mat-select [(ngModel)]="nuevoJuguete.categoria" name="categoria" required>
           <mat-option *ngFor="let cat of categorias" [value]="cat.id">
-            {{cat.nombre}}
+            {{ cat.nombre }}
           </mat-option>
         </mat-select>
       </mat-form-field>
-    </div>
-  
-    <div class="productos-grid" *ngIf="!cargando">
-      <div class="producto-card" *ngFor="let producto of productos">
-        <img [src]="'assets/imagenes/' + producto.imagen" [alt]="producto.nombre">
-        <div class="producto-info">
-          <h3>{{producto.nombre}}</h3>
-          <p>Precio: {{producto.precio}}€</p>
-          <mat-form-field>
-            <mat-label>Stock</mat-label>
-            <input matInput type="number" [(ngModel)]="producto.stock" min="0">
-          </mat-form-field>
-          <button mat-raised-button color="primary" (click)="actualizarStock(producto)">
-            Actualizar Stock
-          </button>
-        </div>
+
+      <!-- Campos del juguete -->
+      <mat-form-field>
+        <mat-label>Nombre</mat-label>
+        <input matInput [(ngModel)]="nuevoJuguete.datos.nombre" name="nombre" required>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Precio</mat-label>
+        <input matInput type="number" [(ngModel)]="nuevoJuguete.datos.precio" name="precio" required>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Imagen (URL)</mat-label>
+        <input matInput [(ngModel)]="nuevoJuguete.datos.imagen" name="imagen" required>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Descripción</mat-label>
+        <textarea matInput [(ngModel)]="nuevoJuguete.datos.descripcion" name="descripcion" required></textarea>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Edad Recomendada</mat-label>
+        <input matInput [(ngModel)]="nuevoJuguete.datos.edad_recomendada" name="edad_recomendada" required>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Dimensiones</mat-label>
+        <input matInput [(ngModel)]="nuevoJuguete.datos.dimensiones" name="dimensiones" required>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Marca</mat-label>
+        <input matInput [(ngModel)]="nuevoJuguete.datos.marca" name="marca" required>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Stock</mat-label>
+        <input matInput type="number" [(ngModel)]="nuevoJuguete.datos.stock" name="stock" required>
+      </mat-form-field>
+
+      <!-- Botón para enviar el formulario -->
+
+      <button mat-raised-button color="primary" type="submit" class="btn-anadir">
+        Agregar Juguete
+      </button>
+    </form>
+  </div>
+
+  <!-- Filtros y lista de productos -->
+  <div class="filtros">
+    <mat-form-field>
+      <mat-label>Categoría</mat-label>
+      <mat-select [(ngModel)]="categoriaSeleccionada" (selectionChange)="onCategoriaChange()">
+        <mat-option *ngFor="let cat of categorias" [value]="cat.id">
+          {{ cat.nombre }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="productos-grid" *ngIf="!cargando">
+    <div class="producto-card" *ngFor="let producto of productos">
+      <img [src]="'assets/imagenes/' + producto.imagen" [alt]="producto.nombre">
+      <div class="producto-info">
+        <h3>{{ producto.nombre }}</h3>
+        <p>Precio: {{ producto.precio }}€</p>
+        <mat-form-field>
+          <mat-label>Stock</mat-label>
+          <input matInput type="number" [(ngModel)]="producto.stock" min="0">
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="actualizarStock(producto)">
+          Actualizar Stock
+        </button>
       </div>
     </div>
-  
-    <div class="loading" *ngIf="cargando">
-      Cargando productos...
-    </div>
-  
-    <div class="error" *ngIf="error">
-      {{error}}
-    </div>
-  </div> 
+  </div>
+
+  <div class="loading" *ngIf="cargando">
+    Cargando productos...
+  </div>
+
+  <div class="error" *ngIf="error">
+    {{ error }}
+  </div>
+</div>

@@ -1,3 +1,34 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.btn-volver, .btn-cerrar-sesion {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.btn-volver {
+  background-color: #e2e8f0;
+  color: #2d3748;
+}
+
+.btn-cerrar-sesion {
+  background-color: #fc8181;
+  color: white;
+}
+
+  /* Estilos para el Snackbar de éxito */
+.snackbar-exito {
+    background-color: #4CAF50; 
+    color: white;
+}
+
+/* Estilos para el Snackbar de error */
+.snackbar-error {
+  background-color: #dc3545; 
+  color: white;
+}

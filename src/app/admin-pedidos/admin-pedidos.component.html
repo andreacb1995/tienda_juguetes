@@ -35,7 +35,7 @@
             Rechazar Pedido
           </button>
         </div>
-        <div class="estado" *ngIf="pedido.estado !== 'pendiente'">
+        <div class="estado" [ngClass]="{'aceptado': pedido.estado === 'aceptado', 'rechazado': pedido.estado === 'rechazado'}">
           Estado: {{pedido.estado}}
         </div>
       </div>

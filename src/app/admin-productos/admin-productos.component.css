@@ -1,56 +1,126 @@
 .admin-productos {
-    padding: 20px;
-  }
-  
-  .filtros {
-    margin-bottom: 20px;
-  }
-  
-  .productos-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-    padding: 20px;
-  }
-  
-  .producto-card {
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    overflow: hidden;
-  }
-  
-  .producto-card img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-  }
-  
-  .producto-info {
-    padding: 15px;
-  }
-  
-  .producto-info h3 {
-    margin: 0 0 10px 0;
-    font-size: 1.2em;
-  }
-  
-  .loading {
-    text-align: center;
-    padding: 20px;
-  }
-  
-  .error {
-    color: red;
-    text-align: center;
-    padding: 20px;
-  }
-  
-  mat-form-field {
-    width: 100%;
-    margin-bottom: 10px;
-  }
-  
-  button {
-    width: 100%;
-  }
+  padding: 20px;
+}
+
+/* Botón para mostrar/ocultar el formulario */
+.btn-anadir {
+  margin-bottom: 20px;
+  background-color: transparent;
+  color: #2c5282; /* Azul */
+  border: 1px solid #2c5282;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.btn-anadir:hover {
+  background-color: #2c5282; 
+  color: white;
+}
+
+/* Formulario para añadir nuevo juguete */
+.nuevo-juguete-form {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.nuevo-juguete-form h2 {
+  margin-bottom: 15px;
+  font-size: 18px;
+  color: #333;
+}
+
+.nuevo-juguete-form mat-form-field {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.nuevo-juguete-form textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.btn-enviar {
+  width: 100%;
+  background-color: #2c5282; 
+  color: white;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.btn-enviar:hover {
+  background-color: #1a365d; 
+}
+
+/* Filtros */
+.filtros {
+  margin-bottom: 20px;
+}
+
+/* Productos */
+.productos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.producto-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.producto-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.producto-info {
+  padding: 15px;
+}
+
+.producto-info h3 {
+  margin: 0 0 10px 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.producto-info p {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.producto-info button {
+  width: 100%;
+  background-color: #2c5282; 
+  color: white;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.producto-info button:hover {
+  background-color: #1a365d; 
+}
+
+/* Mensajes de carga y error */
+.loading, .error {
+  text-align: center;
+  padding: 20px;
+  font-size: 14px;
+  color: #666;
+}
+
+.error {
+  color: #dc3545; 
+}
